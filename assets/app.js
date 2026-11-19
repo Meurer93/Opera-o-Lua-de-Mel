@@ -75,7 +75,7 @@
   function atualizarPainel(v) {
     const pct = Math.min(100, (v / META) * 100);
     $("#arrecadado").textContent = brl(v);
-    $("#percentual").textContent = (pct < 10 && pct > 0 ? pct.toFixed(1).replace(".", ",") : Math.floor(pct)) + "%";
+    $("#percentual").textContent = pct > 0 && pct < 1 ? "<1%" : Math.floor(pct) + "%";
     $("#barra-fill").style.width = pct + "%";
     $("#barra").setAttribute("aria-valuenow", Math.round(pct));
     const prox = D.findIndex((d) => d.meta > v);
