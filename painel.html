@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Painel do casal · Operação Lua de Mel</title>
+<meta name="theme-color" content="#65283B">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Great+Vibes&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/estilo.css?v=10">
+<link rel="stylesheet" href="assets/painel.css?v=1">
+</head>
+<body>
+<header class="topo">
+  <img class="monograma" src="assets/ui/monograma.svg" width="64" height="64" alt="">
+  <p class="pre">Painel do casal</p>
+  <h1>Lua de Mel</h1>
+  <img class="ramo" src="assets/ui/ramo-oliva.svg" width="240" height="40" alt="">
+</header>
+
+<main class="painel-casal">
+  <!-- login -->
+  <section id="tela-login" class="cartao-painel">
+    <h2>Entrar</h2>
+    <p>Use a senha de administrador (o <b>ADMIN_TOKEN</b> salvo no Cloudflare). Ela fica guardada só nesta aba do navegador.</p>
+    <form id="form-login">
+      <label class="campo"><span>Senha</span><input id="senha" type="password" autocomplete="current-password" required></label>
+      <p class="erro" id="erro-login" hidden></p>
+      <button class="btn btn-vinho" type="submit">Entrar no painel</button>
+    </form>
+  </section>
+
+  <!-- painel -->
+  <section id="tela-painel" hidden>
+    <div class="resumo">
+      <div class="card-num"><span class="rotulo">Arrecadado</span><b id="r-total">—</b></div>
+      <div class="card-num"><span class="rotulo">Contribuições</span><b id="r-qtd">—</b></div>
+      <div class="card-num"><span class="rotulo">Média por Pix</span><b id="r-media">—</b></div>
+      <div class="card-num"><span class="rotulo">Recados públicos</span><b id="r-publicos">—</b></div>
+    </div>
+
+    <div class="barra-acoes">
+      <div class="filtros" id="filtros-painel" role="toolbar" aria-label="Filtrar contribuições">
+        <button type="button" data-f="todos" aria-pressed="true">Todas</button>
+        <button type="button" data-f="mensagem" aria-pressed="false">Com mensagem</button>
+        <button type="button" data-f="publico" aria-pressed="false">No mural</button>
+        <button type="button" data-f="privado" aria-pressed="false">Privadas</button>
+      </div>
+      <div class="acoes-dir">
+        <button class="btn btn-oliva btn-peq" type="button" id="btn-csv">⬇ Baixar planilha</button>
+        <button class="btn btn-peq btn-claro" type="button" id="btn-atualizar">↻ Atualizar</button>
+        <button class="btn btn-peq btn-claro" type="button" id="btn-sair">Sair</button>
+      </div>
+    </div>
+
+    <div id="lista" class="lista-contrib" aria-live="polite"></div>
+
+    <section class="cartao-painel">
+      <h2>Ajuste manual</h2>
+      <p>Para presentes recebidos fora do site (dinheiro, Pix direto na chave) ou para corrigir o total. Use valor negativo para descontar. O ajuste soma na barra do site.</p>
+      <form id="form-ajuste" class="ajuste">
+        <label class="campo"><span>Valor (R$)</span><input id="aj-valor" inputmode="decimal" placeholder="Ex.: 200 ou -5" required></label>
+        <label class="campo"><span>Descrição</span><input id="aj-desc" maxlength="200" placeholder="Ex.: Presente em dinheiro da tia Ana" required></label>
+        <button class="btn btn-vinho" type="submit">Lançar ajuste</button>
+      </form>
+      <p class="erro" id="erro-ajuste" hidden></p>
+      <ul class="lista-ajustes" id="lista-ajustes"></ul>
+    </section>
+  </section>
+</main>
+
+<footer class="rodape"><a href="./">← Voltar ao site</a></footer>
+
+<script src="assets/config.js?v=10"></script>
+<script src="assets/painel.js?v=1"></script>
+</body>
+</html>

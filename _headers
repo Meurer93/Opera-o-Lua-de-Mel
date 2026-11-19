@@ -8,3 +8,6 @@
   Cache-Control: public, max-age=604800
 /fotos/fotos.json
   Cache-Control: public, max-age=60
+/painel*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store

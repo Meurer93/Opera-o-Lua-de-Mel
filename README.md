@@ -24,6 +24,17 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 | `efi-proxy/` | Intermediário mTLS (Vercel, região São Paulo) que repassa as chamadas à Efí com o certificado |
 | `index-antigo.html` | Versão antiga, preservada como backup |
 
+## Painel do casal
+
+Endereço: `/painel` (por exemplo, https://opera-o-lua-de-mel.pages.dev/painel). A senha é o `ADMIN_TOKEN` salvo nos secrets do Worker. O painel mostra:
+
+- total, contribuições e lista com data, nome (ou "Anônimo"), valor, mensagem e situação no mural (público, privado ou oculto);
+- botão para ocultar ou mostrar recados no mural;
+- ajuste manual (valor positivo ou negativo) para presentes recebidos fora do site;
+- download da planilha em CSV, que abre no Excel ou no Google Planilhas.
+
+A página não é indexada por buscadores. A senha fica só na aba do navegador e é apagada ao clicar em "Sair" ou fechar a aba.
+
 ## Mural de carinho (aba Agradecimento)
 
 - No Pix, a caixa "Quero que meu nome e mensagem apareçam no mural" vem **desmarcada**.

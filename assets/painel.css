@@ -1,0 +1,36 @@
+/* Painel do casal — usa os tokens de estilo.css */
+.painel-casal{max-width:1000px;margin:0 auto;padding:8px 16px 30px}
+.cartao-painel{background:var(--marfim);border:1px solid var(--dourado);border-radius:var(--raio);box-shadow:var(--sombra);padding:18px;margin:14px 0}
+.cartao-painel h2{font-family:var(--f-titulo);color:var(--vinho);font-size:28px;margin:0 0 6px}
+.cartao-painel p{color:var(--suave);font-size:14.5px;margin:0 0 10px}
+#tela-login{max-width:440px;margin:10px auto}
+.btn-peq{min-height:42px;padding:8px 14px;font-size:14px}
+.btn-claro{background:var(--marfim);color:var(--verde);border:1px solid #b8956299}
+.resumo{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:6px 0 14px}
+@media(min-width:760px){.resumo{grid-template-columns:repeat(4,1fr)}}
+.card-num{background:var(--marfim);border:1px solid #b8956288;border-radius:16px;padding:12px 14px}
+.card-num b{display:block;font-family:var(--f-titulo);font-size:28px;color:var(--vinho);line-height:1.15;font-variant-numeric:lining-nums tabular-nums}
+.barra-acoes{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin:4px 0 10px}
+.barra-acoes .filtros{padding:0}
+.acoes-dir{display:flex;gap:8px;flex-wrap:wrap}
+.lista-contrib{display:grid;gap:10px}
+.contrib{background:#fffaf2;border:1px solid #b8956266;border-radius:16px;padding:12px 14px;display:grid;gap:6px}
+.contrib .topo-c{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.contrib .nome{font-family:var(--f-titulo);font-weight:700;font-size:21px;color:var(--verde)}
+.contrib .nome.anon{color:var(--suave);font-style:italic}
+.contrib .valor-c{font-family:var(--f-titulo);font-weight:700;font-size:22px;color:var(--vinho);font-variant-numeric:lining-nums tabular-nums}
+.contrib .meta-c{font-size:12.5px;color:var(--suave)}
+.contrib .msg{margin:0;padding:8px 12px;border-left:3px solid var(--dourado);background:var(--marfim);border-radius:8px;font-family:var(--f-titulo);font-style:italic;font-size:17px;color:#3a2a22}
+.contrib .rodape-c{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.selo-c{display:inline-block;font:800 11px var(--f-texto);letter-spacing:.06em;padding:3px 9px;border-radius:99px}
+.selo-c.pub{background:#e3e6cf;color:var(--oliva-esc)}
+.selo-c.priv{background:var(--champagne);color:var(--verde)}
+.selo-c.oculto{background:#f0dde2;color:var(--vinho)}
+.selo-c.dev{background:#fbe3d6;color:#8a3a1a}
+.vazio-p{padding:20px;text-align:center;color:var(--suave);border:1.5px dashed var(--dourado);border-radius:16px}
+.ajuste{display:grid;gap:4px}
+@media(min-width:700px){.ajuste{grid-template-columns:160px 1fr auto;align-items:end;gap:10px}.ajuste .btn{margin-bottom:10px}}
+.lista-ajustes{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.lista-ajustes li{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;background:#fffaf2;border:1px solid #b8956255;border-radius:10px;font-size:14px}
+.lista-ajustes b{color:var(--vinho)}
+.rodape a{color:var(--vinho)}
