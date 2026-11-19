@@ -2,83 +2,127 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4ead8">
 <title>Operação Lua de Mel</title>
 <style>
-:root{--terracotta:#a95336;--sage:#718b70;--sand:#f4ead8;--ink:#493326;--cream:#fffaf1}
+:root{--terracotta:#a95336;--sage:#718b70;--sand:#f4ead8;--ink:#493326;--cream:#fffaf1;--road:#8c8174}
 *{box-sizing:border-box}body{margin:0;background:var(--sand);color:var(--ink);font-family:Georgia,serif}
-.hero{min-height:390px;padding:32px 20px 24px;text-align:center;background:linear-gradient(135deg,#f7d6b4,#f5ead6 55%,#d7e1ce);position:relative;overflow:hidden}
-h1{font-size:clamp(2.3rem,8vw,4.6rem);line-height:.98;margin:12px auto;color:#783e2b;max-width:760px}
-.sub{font-size:1.08rem;font-style:italic;margin:16px auto}
-.car-scene{max-width:760px;margin:20px auto 0;position:relative}
-.road{height:112px;border-radius:60% 60% 0 0/30% 30% 0 0;background:#8a8173;position:relative;overflow:hidden;border-top:8px solid #d4c3a6}
-.road:after{content:"";position:absolute;left:0;right:0;top:52px;border-top:4px dashed #f7e8bd}
-.car{position:absolute;z-index:2;left:0;top:18px;width:82px;height:39px;transition:left .7s ease;filter:drop-shadow(0 4px 2px #49332655)}
-.car-body{position:absolute;left:3px;bottom:4px;width:76px;height:22px;background:#fff;border:2px solid #9b9b9b;border-radius:13px 18px 8px 8px}
-.car-body:before{content:"";position:absolute;left:17px;top:-15px;width:39px;height:17px;background:#fff;border:2px solid #9b9b9b;border-bottom:0;border-radius:13px 15px 0 0}
-.car-body:after{content:"";position:absolute;left:22px;top:-11px;width:30px;height:10px;background:#b9d2dc;border-radius:7px 8px 0 0}
-.wheel{position:absolute;bottom:0;width:15px;height:15px;background:#333;border:3px solid #aaa;border-radius:50%;z-index:2}
-.wheel.one{left:15px}.wheel.two{right:10px}
-.car-label{position:absolute;left:33px;bottom:10px;font: bold 5px Arial;color:#777;z-index:3}
-.road-label{position:absolute;z-index:3;top:74px;font: bold 11px Arial;color:white}.start{left:12px}.end{right:12px}
-main{max-width:900px;margin:-8px auto 40px;padding:0 16px;position:relative}
-.panel{background:var(--cream);border:1px solid #e4d3b9;border-radius:22px;padding:22px;margin:16px 0;box-shadow:0 8px 24px #60442a12}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{background:#f4ead8;border-radius:16px;padding:15px}.stat strong{display:block;font-size:1.65rem;color:var(--sage);margin-top:5px}
+header{padding:35px 18px 25px;text-align:center;background:linear-gradient(140deg,#f8dfc5,#f6edda 55%,#dce5d3)}
+.kicker{font:12px Arial;letter-spacing:3px;color:var(--sage);text-transform:uppercase}
+h1{font-size:clamp(2.4rem,9vw,4rem);line-height:.98;margin:15px 0;color:#783e2b}
+header p{font-size:1.12rem;font-style:italic;max-width:600px;margin:15px auto}
+main{max-width:900px;margin:auto;padding:0 14px 36px}
+.panel{background:var(--cream);border:1px solid #e4d3b9;border-radius:22px;padding:20px;margin:16px 0;box-shadow:0 8px 24px #60442a12}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f4ead8;border-radius:15px;padding:14px}.stat strong{display:block;font-size:1.55rem;color:var(--sage);margin-top:5px}
 .progress{height:13px;background:#e5ddcf;border-radius:20px;overflow:hidden;margin:14px 0}.bar{height:100%;width:0;background:var(--sage);transition:width .5s}
-h2{margin:0 0 14px;color:#78432e;font-size:1.5rem}.milestones{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
-.mile{border:1px solid #e4d3b9;border-radius:15px;padding:13px;background:#fffdf8}.mile b{display:block;color:var(--terracotta);font-size:1.08rem}.mile small{display:block;margin-top:5px;line-height:1.35}.locked{opacity:.55}.unlocked{border:2px solid var(--sage);background:#edf2e9}
-.cta{display:inline-block;background:var(--terracotta);color:white;text-decoration:none;padding:14px 22px;border-radius:30px;font: bold 15px Arial;margin-top:8px}
-.note{font:13px/1.5 Arial,sans-serif;color:#76695d}.footer{text-align:center;padding:20px;font:13px Arial;color:#76695d}
-@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.panel{padding:17px}.hero{min-height:350px}}
+.note{font:13px/1.5 Arial,sans-serif;color:#76695d}
+h2{margin:0 0 8px;color:#78432e;font-size:1.55rem}.map-intro{font:14px/1.5 Arial;color:#76695d;margin:0 0 10px}
+.map{position:relative;max-width:680px;margin:0 auto;background:linear-gradient(#dce9df,#f5e8d1);border-radius:20px;overflow:hidden;padding:8px}
+.map svg{display:block;width:100%;height:auto}
+.road-shadow{fill:none;stroke:#d0b99a;stroke-width:35;stroke-linecap:round;stroke-linejoin:round}
+.road-line{fill:none;stroke:var(--road);stroke-width:27;stroke-linecap:round;stroke-linejoin:round}
+.road-dash{fill:none;stroke:#f7e8c5;stroke-width:2.5;stroke-dasharray:8 8;stroke-linecap:round}
+.node{cursor:pointer;outline:none}.node circle{fill:#fffaf1;stroke:var(--terracotta);stroke-width:3}.node text{font: bold 11px Arial;fill:var(--ink);text-anchor:middle;pointer-events:none}.node.active circle{fill:#dce8d7;stroke:var(--sage);stroke-width:5}
+.node:focus circle{stroke:#1d5d9b;stroke-width:5}
+.car-marker{font-size:24px;transition:transform .5s ease}
+.map-legend{display:flex;justify-content:space-between;font:12px Arial;color:#6d6257;padding:0 8px 8px}
+.details{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center}.details img{width:110px;height:95px;object-fit:cover;border-radius:14px}
+.details h3{margin:0 0 5px;color:var(--terracotta)}.details p{margin:0;font:14px/1.45 Arial;color:#62574e}
+button{border:0;border-radius:24px;background:var(--terracotta);color:white;padding:12px 18px;font-weight:bold;font-size:14px;cursor:pointer}
+.milestones{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:9px;margin-top:14px}
+.mile{background:#fffdf8;border:1px solid #e4d3b9;border-radius:14px;padding:12px;cursor:pointer;text-align:left;color:var(--ink)}
+.mile b{display:block;color:var(--terracotta);font-size:1.05rem}.mile small{display:block;margin-top:5px;line-height:1.35}.mile.unlocked{border:2px solid var(--sage);background:#edf2e9}
+.footer{text-align:center;padding:20px;font:13px Arial;color:#76695d}
+@media(max-width:460px){.panel{padding:16px}.details{grid-template-columns:90px 1fr}.details img{width:90px;height:85px}}
 </style>
 </head>
 <body>
-<header class="hero">
-  <div style="font:12px Arial;letter-spacing:3px;text-transform:uppercase;color:#718b70">Nossa viagem começa com você</div>
-  <h1>Operação<br>Lua de Mel ♡</h1>
-  <p class="sub">Ajude a realizar nosso sonho — cada real leva o carrinho mais longe!</p>
-  <div class="car-scene">
-    <div class="car" id="car" aria-label="Miniatura branca inspirada no BYD Dolphin Mini, apontando para a direita"><div class="car-body"></div><span class="wheel one"></span><span class="wheel two"></span><span class="car-label">BYD</span></div>
-    <div class="road"><span class="road-label start">ITAPEMA</span><span class="road-label end">TAILÂNDIA</span></div>
-  </div>
+<header>
+<div class="kicker">Nossa viagem começa com você</div>
+<h1>Operação<br>Lua de Mel ♡</h1>
+<p>Ajude a realizar nosso sonho — cada real leva o carro mais longe!</p>
 </header>
 <main>
-  <section class="panel">
-    <div class="stats">
-      <div class="stat"><span>Arrecadado</span><strong id="raised">R$ 0,00</strong></div>
-      <div class="stat"><span>Meta ilustrativa</span><strong id="goal">R$ 39.800</strong></div>
-    </div>
-    <div class="progress"><div class="bar" id="bar"></div></div>
-    <div class="note" id="progressText">0% da jornada percorrida · Demonstração visual, ainda sem pagamentos conectados.</div>
-  </section>
-  <section class="panel">
-    <h2>Marcos da nossa estrada</h2>
-    <div class="milestones" id="milestones">
-      <div class="mile locked" data-value="50"><b>R$ 50</b><small>Primeira experiência regional</small></div>
-      <div class="mile locked" data-value="150"><b>R$ 150</b><small>Segundo destino regional</small></div>
-      <div class="mile locked" data-value="350"><b>R$ 350</b><small>Terceiro destino regional</small></div>
-      <div class="mile locked" data-value="650"><b>R$ 650</b><small>Quarto destino regional</small></div>
-      <div class="mile locked" data-value="1150"><b>R$ 1.150</b><small>Quinto destino regional</small></div>
-    </div>
-  </section>
-  <section class="panel" style="text-align:center">
-    <h2>Faça parte dessa jornada ♡</h2>
-    <p>Escolha sua contribuição e ajude nosso carro a avançar rumo à Tailândia.</p>
-    <a class="cta" href="#" onclick="alert('O Pix será ativado após a integração segura com a Efí.');return false">Contribuir via Pix</a>
-    <p class="note">Esta é uma primeira versão demonstrativa. O botão Pix ainda não recebe pagamentos.</p>
-  </section>
+<section class="panel">
+<div class="stats">
+<div class="stat">Arrecadado<strong id="raised">R$ 0,00</strong></div>
+<div class="stat">Meta ilustrativa<strong id="goal">R$ 39.800</strong></div>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="note" id="progressText">0% da jornada · Demonstração visual, ainda sem pagamentos conectados.</div>
+</section>
+
+<section class="panel">
+<h2>A estrada dos nossos sonhos</h2>
+<p class="map-intro">Acompanhe o caminho em curvas. Toque em cada destino para descobrir atrações e experiências.</p>
+<div class="map">
+<svg viewBox="0 0 340 590" role="img" aria-label="Mapa ilustrado com estrada sinuosa e cinco destinos">
+<defs>
+<linearGradient id="land" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d7e5d2"/><stop offset="1" stop-color="#f5dfc3"/></linearGradient>
+</defs>
+<rect width="340" height="590" rx="15" fill="url(#land)"/>
+<g opacity=".45" fill="#9db89a"><circle cx="42" cy="90" r="29"/><circle cx="292" cy="160" r="42"/><circle cx="52" cy="335" r="38"/><circle cx="290" cy="455" r="36"/></g>
+<path class="road-shadow" d="M170 555 C170 515 65 520 65 460 S280 405 280 340 S70 300 70 230 S270 180 270 115 S170 78 170 35"/>
+<path class="road-line" d="M170 555 C170 515 65 520 65 460 S280 405 280 340 S70 300 70 230 S270 180 270 115 S170 78 170 35"/>
+<path class="road-dash" d="M170 555 C170 515 65 520 65 460 S280 405 280 340 S70 300 70 230 S270 180 270 115 S170 78 170 35"/>
+<g class="node active" data-id="0" tabindex="0" role="button" aria-label="Itapema, marco de 50 reais" transform="translate(170 520)">
+<circle r="17"/><text y="4">1</text><text y="30">ITAPEMA</text>
+</g>
+<g class="node" data-id="1" tabindex="0" role="button" aria-label="Porto Belo, marco de 150 reais" transform="translate(65 460)">
+<circle r="17"/><text y="4">2</text><text y="-25">PORTO BELO</text>
+</g>
+<g class="node" data-id="2" tabindex="0" role="button" aria-label="Bombinhas, marco de 350 reais" transform="translate(280 340)">
+<circle r="17"/><text y="4">3</text><text y="30">BOMBINHAS</text>
+</g>
+<g class="node" data-id="3" tabindex="0" role="button" aria-label="Balneário Camboriú, marco de 650 reais" transform="translate(70 230)">
+<circle r="17"/><text y="4">4</text><text y="-25">BAL. CAMBORIÚ</text>
+</g>
+<g class="node" data-id="4" tabindex="0" role="button" aria-label="Florianópolis, marco de 1150 reais" transform="translate(270 115)">
+<circle r="17"/><text y="4">5</text><text y="30">FLORIANÓPOLIS</text>
+</g>
+<g id="carDot" transform="translate(170 555)"><text class="car-marker" x="-13" y="8">🚘</text></g>
+<text x="170" y="20" font-size="10" fill="#493326" text-anchor="middle" font-weight="bold">PRÓXIMA ETAPA DA VIAGEM</text>
+</svg>
+<div class="map-legend"><span>INÍCIO · ITAPEMA</span><span>Estrada ilustrativa</span><span>CONTINUA…</span></div>
+</div>
+<div class="details" id="destinationDetails">
+<img id="destImg" src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400" alt="Praia">
+<div><h3 id="destName">Itapema</h3><p id="destInfo">Praias, orla e mirantes para começar nossa viagem pelo litoral catarinense.</p><p class="note" id="destTarget">Marco: R$ 50</p></div>
+</div>
+<div class="milestones" id="milestones"></div>
+</section>
+<section class="panel" style="text-align:center">
+<h2>Faça parte dessa jornada ♡</h2>
+<p>Em breve você poderá escolher o valor e contribuir via Pix.</p>
+<button type="button" onclick="alert('O Pix será ativado após a integração segura com a Efí.')">Contribuir via Pix</button>
+<p class="note">Demonstração visual. Pagamentos ainda não estão conectados.</p>
+</section>
 </main>
 <div class="footer">Feito com carinho por André & Érika · Operação Lua de Mel</div>
 <script>
-/* Demonstração local: altere demoValue para visualizar o avanço. */
-const demoValue=0, goal=39800;
+const goal=39800, demoValue=0;
+const places=[
+{name:"Itapema",value:50,info:"Praias, orla e mirantes para começar nossa viagem pelo litoral catarinense.",attractions:"Meia Praia · Canto da Praia · Mirante do Encanto",img:"https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400"},
+{name:"Porto Belo",value:150,info:"Uma parada entre águas claras, passeios de barco e clima de vila costeira.",attractions:"Praia do Caixa d’Aço · Ilha de Porto Belo · Passeios de barco",img:"https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=400"},
+{name:"Bombinhas",value:350,info:"Praias de água transparente e trilhas com vistas para o mar.",attractions:"Praia de Bombinhas · Sepultura · Morro do Macaco",img:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400"},
+{name:"Balneário Camboriú",value:650,info:"Uma parada urbana com atrações, mirantes e vida à beira-mar.",attractions:"Parque Unipraias · Praia Central · Roda-gigante",img:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400"},
+{name:"Florianópolis",value:1150,info:"A última etapa regional, entre praias, lagoas e paisagens da ilha.",attractions:"Ponte Hercílio Luz · Lagoa da Conceição · Joaquina",img:"https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=400"}
+];
+function money(n){return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0})}
+function showPlace(i){
+ const p=places[i];document.getElementById('destName').textContent=p.name;
+ document.getElementById('destInfo').textContent=p.info+" Atrações: "+p.attractions+".";
+ document.getElementById('destTarget').textContent="Marco acumulado: "+money(p.value);
+ document.getElementById('destImg').src=p.img;
+ document.querySelectorAll('.node').forEach((n,j)=>n.classList.toggle('active',i===j));
+}
+places.forEach((p,i)=>{
+ const b=document.createElement('button');b.className='mile';b.innerHTML='<b>'+money(p.value)+'</b><small>'+p.name+'</small>';b.onclick=()=>showPlace(i);document.getElementById('milestones').appendChild(b);
+});
+document.querySelectorAll('.node').forEach(n=>{n.addEventListener('click',()=>showPlace(+n.dataset.id));n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showPlace(+n.dataset.id)}})});
 const pct=Math.max(0,Math.min(100,demoValue/goal*100));
-document.getElementById('raised').textContent=demoValue.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-document.getElementById('bar').style.width=pct+'%';
-document.getElementById('progressText').textContent=pct.toFixed(1).replace('.',',')+'% da jornada percorrida · Demonstração visual, ainda sem pagamentos conectados.';
-document.getElementById('car').style.left=`calc(${pct}% * (100% - 82px) / 100)`;
-document.querySelectorAll('.mile').forEach(el=>{if(demoValue>=Number(el.dataset.value)){el.classList.remove('locked');el.classList.add('unlocked')}});
+document.getElementById('raised').textContent=money(demoValue);document.getElementById('bar').style.width=pct+'%';document.getElementById('progressText').textContent=pct.toFixed(1).replace('.',',')+'% da jornada · Demonstração visual, ainda sem pagamentos conectados.';
 </script>
 </body>
 </html>
