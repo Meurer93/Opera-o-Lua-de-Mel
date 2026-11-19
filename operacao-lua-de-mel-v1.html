@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4eee3">
+<title>Operação Lua de Mel</title>
+<style>
+:root{--cream:#f4eee3;--paper:#fffaf1;--ink:#34352f;--muted:#77776d;--terra:#b87555;--sage:#788a70;--road:#77766f;--roadline:#f8e8c8;--gold:#d9ad65}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+button,input{font:inherit}.wrap{max-width:1040px;margin:auto;padding:22px 18px 56px}
+.hero{position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(130deg,#dce2d1,#f4e4cf 58%,#e7c8ae);padding:34px 28px 26px;min-height:245px}
+.kicker{font:700 11px/1.2 Arial,sans-serif;letter-spacing:.19em;text-transform:uppercase;color:#66725e}
+h1{font-size:clamp(34px,6vw,58px);line-height:.98;margin:12px 0 10px;font-weight:500;max-width:570px}
+.hero p{font:15px/1.55 Arial,sans-serif;color:#55584f;max-width:520px;margin:0}
+.hero-art{position:absolute;right:3%;bottom:-5px;width:min(36%,330px);opacity:.92}
+.panel{background:var(--paper);border:1px solid #e7ddce;border-radius:22px;padding:20px;margin-top:18px;box-shadow:0 8px 26px #55432a0b}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end}
+.small{font:12px Arial,sans-serif;color:var(--muted)}.big{font:700 clamp(25px,4vw,36px) Arial,sans-serif;color:var(--terra);margin-top:4px}
+.goal{text-align:right}.progress{height:11px;background:#e8e0d4;border-radius:20px;overflow:hidden;margin:16px 0 8px}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--sage),var(--terra));border-radius:20px;transition:width .4s}
+.next{font:14px Arial,sans-serif;color:#5d6256}
+.road-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin:28px 4px 12px}
+h2{font-size:26px;font-weight:500;margin:0}.road-head span{font:12px Arial,sans-serif;color:var(--muted)}
+.roadbox{position:relative;background:linear-gradient(180deg,#e5e8d9,#e8e0ce);border-radius:24px;overflow:hidden;padding:10px}
+#roadSvg{display:block;width:100%;height:auto;min-height:320px}
+.road-base{fill:none;stroke:#aaa79d;stroke-width:54;stroke-linecap:round;stroke-linejoin:round}
+.road-main{fill:none;stroke:var(--road);stroke-width:48;stroke-linecap:round;stroke-linejoin:round}
+.road-dash{fill:none;stroke:var(--roadline);stroke-width:2.5;stroke-dasharray:12 13;stroke-linecap:round}
+.marker{cursor:pointer}.marker circle{fill:#fff9ed;stroke:var(--terra);stroke-width:3}.marker.done circle{fill:var(--sage);stroke:#fff9ed}.marker text{font:700 11px Arial,sans-serif;fill:#45453e;text-anchor:middle;dominant-baseline:central}.marker.done text{fill:white}
+.marker:focus{outline:none}.marker:focus circle{stroke:#24251f;stroke-width:5}
+#car{transition:transform .45s ease}
+.car-shadow{fill:#333;opacity:.18}.car-body{fill:#fff;stroke:#4c514a;stroke-width:2}.car-glass{fill:#9eafa9;stroke:#4c514a;stroke-width:1.5}.car-detail{fill:#d9ad65;stroke:#4c514a;stroke-width:1}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font:12px Arial,sans-serif;color:var(--muted);padding:9px 7px 0}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--terra);margin-right:5px}.dot.done{background:var(--sage)}
+.destinations{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.destination{border:1px solid #e6ddcf;background:#fffdf8;border-radius:16px;padding:15px;text-align:left;cursor:pointer;color:inherit;transition:.2s}
+.destination:hover,.destination.active{border-color:var(--terra);transform:translateY(-1px);box-shadow:0 5px 16px #55432a12}
+.destination .amount{font:700 13px Arial,sans-serif;color:var(--terra)}
+.destination h3{font-size:18px;font-weight:500;margin:6px 0}
+.destination p{font:13px/1.45 Arial,sans-serif;color:var(--muted);margin:0}
+.destination .status{font:11px Arial,sans-serif;color:var(--sage);margin-top:9px}
+.details{display:none;margin-top:14px;padding:17px;border-radius:16px;background:#edf0e7;font:14px/1.5 Arial,sans-serif}
+.details.show{display:block}.details strong{font-family:Georgia,serif;font-size:19px;font-weight:500}
+.simulator{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.simulator input{min-width:0;flex:1;border:1px solid #d9d0c2;border-radius:12px;padding:12px;background:#fff}.simulator button{border:0;border-radius:12px;background:var(--sage);color:white;padding:12px 16px;cursor:pointer;font:700 13px Arial,sans-serif}
+.notice{font:11px/1.45 Arial,sans-serif;color:#827d72;margin-top:10px}
+footer{text-align:center;font:12px Arial,sans-serif;color:var(--muted);padding:24px 8px}
+@media(max-width:650px){.wrap{padding:12px 12px 40px}.hero{padding:26px 21px 22px;min-height:255px}.hero-art{width:42%;right:-2%;bottom:3px;opacity:.7}.hero p{max-width:70%}.panel{padding:16px}.destinations{grid-template-columns:1fr}.road-head{align-items:start;flex-direction:column}#roadSvg{min-height:420px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+  <div class="kicker">Uma viagem construída juntos</div>
+  <h1>Operação<br>Lua de Mel</h1>
+  <p>Cada contribuição faz nosso carrinho avançar pela estrada. Cada parada revela uma nova experiência para viver a dois.</p>
+  <svg class="hero-art" viewBox="0 0 340 190" aria-hidden="true">
+    <path d="M0 154 Q90 115 170 150 T340 115" fill="none" stroke="#fff8ec" stroke-width="28" opacity=".7"/>
+    <path d="M0 154 Q90 115 170 150 T340 115" fill="none" stroke="#b5aa95" stroke-width="2" stroke-dasharray="8 9"/>
+    <g transform="translate(135 76)">
+      <ellipse cx="82" cy="80" rx="77" ry="13" fill="#5e594e" opacity=".18"/>
+      <path d="M15 47 Q23 25 53 20 L116 20 Q137 23 149 48 L158 60 L158 78 Q155 86 143 86 L20 86 Q8 83 8 72 L8 60Z" fill="#fff" stroke="#55584f" stroke-width="3"/>
+      <path d="M48 23 L111 23 Q127 26 137 48 L31 48Z" fill="#9fb1a9" stroke="#55584f" stroke-width="2"/>
+      <path d="M81 24 L81 48" stroke="#55584f" stroke-width="2"/>
+      <circle cx="42" cy="83" r="13" fill="#34352f"/><circle cx="42" cy="83" r="5" fill="#d8d0c1"/>
+      <circle cx="127" cy="83" r="13" fill="#34352f"/><circle cx="127" cy="83" r="5" fill="#d8d0c1"/>
+      <path d="M11 59 L2 64 L2 73 L12 73 M153 58 L163 62 L163 72 L155 72" fill="#e9bd79" stroke="#55584f" stroke-width="2"/>
+    </g>
+  </svg>
+</section>
+
+<section class="panel">
+  <div class="stats">
+    <div><div class="small">Já arrecadado</div><div class="big" id="raised">R$ 0,00</div></div>
+    <div class="goal"><div class="small">Meta final</div><div class="big">R$ 50.000</div></div>
+  </div>
+  <div class="progress"><div class="fill" id="fill"></div></div>
+  <div class="next" id="next">Próxima parada: Piquenique em Itapema — R$ 50</div>
+</section>
+
+<div class="road-head"><h2>Nossa estrada</h2><span>Toque em um marco para conhecer a experiência</span></div>
+<section class="roadbox">
+<svg id="roadSvg" viewBox="0 0 900 1160" role="img" aria-label="Estrada sinuosa com 21 marcos de experiências">
+ <path class="road-base" d="M450 1110 C180 1070 150 990 450 930 S760 800 450 740 S150 610 450 550 S760 420 450 360 S150 230 450 170 S700 90 450 45"/>
+ <path class="road-main" d="M450 1110 C180 1070 150 990 450 930 S760 800 450 740 S150 610 450 550 S760 420 450 360 S150 230 450 170 S700 90 450 45"/>
+ <path class="road-dash" d="M450 1110 C180 1070 150 990 450 930 S760 800 450 740 S150 610 450 550 S760 420 450 360 S150 230 450 170 S700 90 450 45"/>
+ <g id="markers"></g>
+ <g id="car">
+   <ellipse class="car-shadow" cx="0" cy="17" rx="23" ry="8"/>
+   <rect class="car-body" x="-23" y="-13" width="46" height="27" rx="9"/>
+   <path class="car-glass" d="M-13 -10 L12 -10 Q17 -9 19 -3 L-18 -3 Q-17 -8 -13 -10Z"/>
+   <path class="car-glass" d="M-18 0 L18 0 L17 9 L-17 9Z"/>
+   <rect class="car-detail" x="-21" y="-8" width="4" height="5" rx="1"/>
+   <rect class="car-detail" x="17" y="-8" width="4" height="5" rx="1"/>
+ </g>
+</svg>
+<div class="legend"><span><i class="dot done"></i>Marco alcançado</span><span><i class="dot"></i>Próximas experiências</span></div>
+</section>
+
+<section class="destinations" id="destinations"></section>
+<section class="details" id="details"></section>
+
+<section class="panel">
+  <strong style="font-size:19px;font-weight:500">Prévia de contribuição</strong>
+  <p class="small" style="line-height:1.5">Use este campo apenas para testar o movimento do carro e os marcos. Ele não realiza cobrança Pix.</p>
+  <div class="simulator">
+    <input id="amount" type="number" min="1" step="1" placeholder="Valor de teste em R$">
+    <button id="add">Simular contribuição</button>
+    <button id="reset" type="button" style="background:#b87555">Zerar teste</button>
+  </div>
+  <div class="notice">DEMONSTRAÇÃO: o valor fica somente nesta página e não representa pagamento. A integração real com a Efí será feita depois, no servidor, com confirmação por webhook.</div>
+</section>
+<footer>Feito com carinho. Cada real nos leva um pouco mais longe. ♡</footer>
+</main>
+<script>
+const stops=[
+[50,"Piquenique em Itapema","Um piquenique simples e especial para começar a nossa estrada.","Local"],
+[150,"Pôr do sol e jantar a dois","Um fim de tarde bonito seguido de um jantar a dois.","Local"],
+[350,"Passeio de barco pela Costa Esmeralda","Um passeio pelo litoral de Itapema e região.","Local"],
+[650,"Gastronomia especial","Uma experiência gastronômica para celebrar a dois.","Local"],
+[1150,"Airbnb e passeio especial","Uma noite fora da rotina, com hospedagem e passeio.","Local"],
+[1500,"Vinícola Thera — Bom Retiro","Hospedagem, vinhos e paisagens da Serra Catarinense.","Santa Catarina"],
+[2500,"Cabana romântica na serra","Uma cabana para descansar e aproveitar a serra.","Santa Catarina"],
+[3500,"Hotel-fazenda","Dias de descanso, natureza e gastronomia rural.","Santa Catarina"],
+[4500,"Rota das Vinícolas de Altitude","Um roteiro de vinhos pela Serra Catarinense.","Santa Catarina"],
+[5000,"Gramado e Canela","Serra Gaúcha, gastronomia, parques e passeios.","Brasil"],
+[7500,"Foz do Iguaçu","Cataratas, Parque das Aves e Marco das Três Fronteiras.","Brasil"],
+[10000,"Cruzeiro romântico — Itajaí","Uma viagem a dois com embarque em Santa Catarina.","Brasil"],
+[12500,"Bonito","Rios cristalinos, flutuação, grutas e cachoeiras.","Brasil"],
+[14500,"Lençóis Maranhenses","Dunas, lagoas e passeios pelos Lençóis.","Brasil"],
+[16000,"Mendoza — Argentina","Vinícolas, montanhas e gastronomia argentina.","Internacional"],
+[20000,"Vinícolas da Patagônia","Uma viagem pelas regiões vinícolas da Patagônia.","Internacional"],
+[25000,"Tour pela América Latina","Uma rota por destinos marcantes da América Latina.","Internacional"],
+[30000,"Mochilão pela Europa","Uma viagem econômica por cidades europeias.","Internacional"],
+[40000,"Eurotour vinícola","Um roteiro europeu dedicado a vinhos e gastronomia.","Internacional"],
+[45000,"Tailândia","Uma viagem de 15 dias pela Tailândia.","Internacional"],
+[50000,"Nova Zelândia — Hobbiton e vinícolas","Nove dias entre a Terra dos Hobbits e vinícolas da Nova Zelândia.","Destino final"]
+];
+const fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+let raised=0, selected=0;
+const path=document.querySelector('.road-main');
+const markers=document.getElementById('markers');
+const destinations=document.getElementById('destinations');
+const details=document.getElementById('details');
+const car=document.getElementById('car');
+const total=path.getTotalLength();
+const points=stops.map((s,i)=>path.getPointAtLength(total*(i/(stops.length-1))));
+function draw(){
+ stops.forEach((s,i)=>{
+  const p=points[i], done=raised>=s[0], g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('class','marker'+(done?' done':''));
+  g.setAttribute('transform',`translate(${p.x} ${p.y})`);
+  g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',`${fmt(s[0])}: ${s[1]}`);
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('r','17');g.appendChild(c);
+  const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.textContent=i+1;g.appendChild(t);
+  g.addEventListener('click',()=>show(i));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show(i)}});
+  markers.appendChild(g);
+  const card=document.createElement('button');card.className='destination';card.type='button';card.innerHTML=`<div class="amount">${fmt(s[0])} · ${s[3]}</div><h3>${s[1]}</h3><p>${s[2]}</p><div class="status">${done?'✓ Marco alcançado':'Marco a desbloquear'}</div>`;
+  card.addEventListener('click',()=>show(i));destinations.appendChild(card);
+ });
+}
+function show(i){
+ selected=i;const s=stops[i];details.classList.add('show');
+ details.innerHTML=`<strong>${s[1]}</strong><p>${s[2]}</p><b>Meta acumulada: ${fmt(s[0])}</b><p>${raised>=s[0]?'Este marco já foi alcançado!':'Faltam '+fmt(Math.max(0,s[0]-raised))+' para chegar a esta experiência.'}</p>`;
+ document.querySelectorAll('.destination').forEach((el,j)=>el.classList.toggle('active',j===i));
+}
+function update(){
+ const pct=Math.min(100,raised/50000*100);
+ document.getElementById('raised').textContent=raised.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+ document.getElementById('fill').style.width=pct+'%';
+ let idx=stops.findIndex(s=>s[0]>raised);if(idx<0)idx=stops.length-1;
+ const next=stops[idx];
+ document.getElementById('next').textContent=raised>=50000?'Chegamos ao destino final!':`Próxima parada: ${next[1]} — ${fmt(next[0])}`;
+ const d=Math.min(1,raised/50000);
+ const p=path.getPointAtLength(total*d);
+ car.setAttribute('transform',`translate(${p.x} ${p.y})`);
+ markers.innerHTML='';destinations.innerHTML='';draw();
+ if(details.classList.contains('show'))show(selected);
+}
+document.getElementById('add').addEventListener('click',()=>{
+ const v=Number(document.getElementById('amount').value);
+ if(Number.isFinite(v)&&v>0){raised=Math.min(50000,raised+v);update();document.getElementById('amount').value='';}
+});
+document.getElementById('reset').addEventListener('click',()=>{raised=0;update();details.classList.remove('show')});
+draw();update();
+</script>
+</body></html>
