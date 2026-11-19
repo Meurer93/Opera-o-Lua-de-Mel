@@ -16,7 +16,7 @@ database_id = "aaad3483-d6b4-48c4-8a5d-d4cb5bd8a918"
 
 [vars]
 EFI_ENV = "producao"
-ALLOWED_ORIGINS = "https://opera-o-lua-de-mel.pages.dev,https://lua-de-mel.andrejosemeurer.workers.dev"
+ALLOWED_ORIGINS = "https://operacaoluademel.com,https://www.operacaoluademel.com,https://opera-o-lua-de-mel.pages.dev"
 # IP divulgado pela Efí para envio de webhooks (dev.efipay.com.br/docs/api-pix/webhooks)
 EFI_WEBHOOK_IPS = "34.193.116.226"
 # Intermediário mTLS fora do Cloudflare (pasta efi-proxy/, hospedado na Vercel)
