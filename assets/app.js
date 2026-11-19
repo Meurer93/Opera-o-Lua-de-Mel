@@ -133,6 +133,7 @@
     $("#md-img").src = imgDestino(i);
     $("#md-img").alt = `Ilustração: ${d.nome}`;
     $("#md-legenda").textContent = `André e Érika · ${d.nome}`;
+    document.querySelector("#modal-destino .casal").hidden = !!d.ilustracao;
     $("#md-regiao").textContent = `Marco ${i + 1} · ${d.regiao}`;
     $("#md-titulo").textContent = `${d.icone} ${d.nome}`;
     $("#md-texto").textContent = d.texto;
@@ -143,6 +144,7 @@
     est.innerHTML = ok
       ? `✓ Experiência alcançada! Meta acumulada: ${brl(d.meta)}`
       : `Meta acumulada: <b>${brl(d.meta)}</b><br>Faltam <b>${brl(d.meta - v)}</b> para chegarmos aqui.<div class="barra"><i style="width:${pctTrecho}%"></i></div>`;
+    $("#modal-destino [data-abrir-pix]").textContent = ok ? "💚 Ajude a seguir viagem" : "💚 Contribuir para chegarmos lá";
     abrir($("#modal-destino"));
   }
   trilho.addEventListener("click", (e) => { const p = e.target.closest(".placa"); if (p) abrirDestino(+p.dataset.i); });
@@ -196,6 +198,12 @@
   // ------------------------------------------------------------ Pix
   const mp = $("#modal-pix");
   let valorEscolhido = 100, poll = null, cobranca = null, relogio = null;
+  let pixPronto = null; // null = desconhecido; false = backend sem credenciais Efí
+  async function verificarPix() {
+    if (!API) return (pixPronto = false);
+    try { const d = await (await fetch(`${API}/api/saude`, { cache: "no-store" })).json(); pixPronto = !!(d.efi && d.efi.certificado && d.efi.credenciais && d.efi.chavePix); }
+    catch (_) { pixPronto = null; }
+  }
   function passo(n) { [1, 2, 3].forEach((k) => ($("#pix-passo-" + k).hidden = k !== n)); }
   function erroPix(msg) { const e = $("#pix-erro"); e.hidden = !msg; e.textContent = msg || ""; }
   function abrirPix() {
@@ -219,7 +227,7 @@
     const valor = Math.round(valorEscolhido * 100) / 100;
     if (!(valor >= 5)) return erroPix("O valor mínimo é R$ 5,00.");
     if (valor > 50000) return erroPix("O valor máximo é R$ 50.000,00.");
-    if (!API) return erroPix("O Pix automático está sendo configurado. Volte em breve! ♡");
+    if (!API || pixPronto === false) return erroPix("O Pix automático está sendo configurado. Volte em breve! ♡");
     const btn = $("#pix-gerar"); btn.disabled = true; btn.textContent = "Gerando Pix…";
     try {
       const r = await fetch(`${API}/api/pix`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ valor, nome: $("#pix-nome").value, mensagem: $("#pix-msg").value }) });
@@ -336,6 +344,7 @@
   renderMarcos(0); atualizarPainel(0); desenhar(0);
   let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => desenhar(exibido), 80); });
   carregarTotal(true);
+  verificarPix();
   if (API && simulado === null) {
     setInterval(() => { if (!document.hidden) carregarTotal(false); }, CFG.atualizarACada || 30000);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) carregarTotal(false); });

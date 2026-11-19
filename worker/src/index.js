@@ -31,6 +31,28 @@ const MAX_COBRANCAS_POR_IP_10MIN = 6;
 
 let tokenCache = { token: null, expira: 0 };
 
+// ---------------------------------------------------------------- site estático embutido
+import SITE from "./site.generated.js";
+const SITE_CACHE = new Map();
+function servirSite(req, url) {
+  if (req.method !== "GET" && req.method !== "HEAD") return new Response("Método não permitido", { status: 405 });
+  let caminho = decodeURIComponent(url.pathname);
+  if (caminho.endsWith("/")) caminho += "index.html";
+  const f = SITE[caminho];
+  if (!f) return new Response("Página não encontrada", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+  const etag = `"${f.e}"`;
+  const longo = /^\/(img\/|carro\.webp)/.test(caminho);
+  const headers = {
+    "content-type": f.t, etag,
+    "cache-control": longo ? "public, max-age=604800" : caminho.endsWith(".json") ? "public, max-age=60" : "public, max-age=300",
+    "x-content-type-options": "nosniff", "referrer-policy": "strict-origin-when-cross-origin",
+  };
+  if (req.headers.get("if-none-match") === etag) return new Response(null, { status: 304, headers });
+  let corpo = SITE_CACHE.get(caminho);
+  if (!corpo) { corpo = Uint8Array.from(atob(f.b), (c) => c.charCodeAt(0)); SITE_CACHE.set(caminho, corpo); }
+  return new Response(req.method === "HEAD" ? null : corpo, { headers });
+}
+
 // ---------------------------------------------------------------- utilidades
 const agoraISO = () => new Date().toISOString();
 
@@ -412,6 +434,7 @@ export default {
       else if (p.startsWith("/api/webhook/efi") && req.method === "POST") return await rotaWebhook(req, env, ctx);
       else if (p.startsWith("/api/admin/")) res = await rotaAdmin(req, env, url);
       else if (p === "/api/saude") res = await rotaSaude(env);
+      else if (!p.startsWith("/api/")) return servirSite(req, url);
       else res = json({ erro: "nao_encontrado" }, 404);
     } catch (e) {
       ctx.waitUntil(registrarEvento(env, "erro_interno", e.message));

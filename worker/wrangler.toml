@@ -1,7 +1,9 @@
-name = "lua-de-mel-api"
+name = "lua-de-mel"
 main = "src/index.js"
 compatibility_date = "2026-11-01"
 workers_dev = true
+
+# O mesmo Worker serve o site (embutido por `npm run build`) e a API em /api/*.
 
 # Conciliação a cada 5 minutos: reconsulta cobranças em aberto na API da Efí.
 [triggers]
@@ -14,7 +16,7 @@ database_id = "aaad3483-d6b4-48c4-8a5d-d4cb5bd8a918"
 
 [vars]
 EFI_ENV = "producao"
-ALLOWED_ORIGINS = "https://opera-o-lua-de-mel.pages.dev"
+ALLOWED_ORIGINS = "https://opera-o-lua-de-mel.pages.dev,https://lua-de-mel.andrejosemeurer.workers.dev"
 # IP divulgado pela Efí para envio de webhooks (dev.efipay.com.br/docs/api-pix/webhooks)
 EFI_WEBHOOK_IPS = "34.193.116.226"
 

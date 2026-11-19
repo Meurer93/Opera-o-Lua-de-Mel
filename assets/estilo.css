@@ -12,6 +12,7 @@ body{margin:0;background:var(--creme);color:var(--tinta);font-family:var(--fonte
 img{max-width:100%;display:block}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:3px solid #2f7ad6;outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
 .sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ---------- madeira ---------- */
@@ -82,7 +83,7 @@ main{max-width:1120px;margin:0 auto;padding:0 0 30px}
 .placa .ic{font-size:1.05em;margin-right:3px}
 .placa.ok{filter:saturate(1.1)}
 .placa.ok .num{background:#3f8a52;box-shadow:0 2px 0 #2a6038}
-.placa .selo{position:absolute;right:-6px;top:-10px;background:#3f8a52;color:#fff;font-size:11px;padding:2px 7px;border-radius:99px;rotate:6deg;box-shadow:0 2px 4px #0003}
+.placa .selo{position:absolute;left:30px;top:-12px;background:#3f8a52;color:#fff;font-size:11px;padding:2px 7px;border-radius:99px;rotate:6deg;box-shadow:0 2px 4px #0003}
 
 .pista{position:absolute;left:0;right:0;bottom:0;height:38%;z-index:1}
 .pista svg{width:100%;height:100%;display:block}
