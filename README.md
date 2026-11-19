@@ -22,6 +22,7 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 | `fotos/fotos.json` | Álbuns de fotos reais da viagem |
 | `worker/` | Worker `lua-de-mel`: serve o site (embutido por `npm run build`) e a API Pix, com D1 |
 | `img/ilustracoes/NN.webp` | Caricaturas do casal nas experiências (8 de 20, recortadas das artes aprovadas) |
+| `efi-proxy/` | Intermediário mTLS (Vercel, região São Paulo) que repassa as chamadas à Efí com o certificado |
 | `index-antigo.html` | Versão antiga, preservada como backup |
 
 ## Como funciona o movimento
@@ -62,6 +63,14 @@ Outras garantias:
 - **Segredos:** ficam apenas em Cloudflare Secrets, nunca no repositório.
 
 Por que a confirmação não depende do webhook: a Efí exige mTLS no servidor que recebe o webhook, validando a cadeia de certificados dela. No Cloudflare, validar a CA de terceiros (BYOCA) é recurso só do plano Enterprise. Por isso o cadastro usa `x-skip-mtls-checking`, e a segurança vem da reconsulta obrigatória na API.
+
+### Por que existe o `efi-proxy`
+
+A API Pix da Efí fica atrás do Cloudflare. O binding mTLS de Workers não apresenta certificado de cliente a destinos que também estão no Cloudflare, e por isso o firewall da Efí devolvia 403 "Attention Required". Esse diagnóstico foi confirmado em 19/11/2026: a mesma resposta aparece numa chamada sem certificado.
+
+A solução é que o Worker chame `https://efi-proxy-lua-de-mel.vercel.app/api/efi`. O intermediário só repassa a requisição para `pix.api.efipay.com.br` usando o certificado. Ele aceita apenas o caminho `/oauth/token` e as rotas `/v2/*`, e exige o segredo compartilhado `EFI_PROXY_SECRET`/`PROXY_SECRET`. O Client ID e o Client Secret continuam somente no Worker.
+
+Variáveis na Vercel (projeto `efi-proxy-lua-de-mel`): `PROXY_SECRET`, `EFI_CERT_P12_BASE64` e `EFI_ENV`.
 
 ### Rotas
 

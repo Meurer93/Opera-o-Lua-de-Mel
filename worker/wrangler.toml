@@ -19,6 +19,8 @@ EFI_ENV = "producao"
 ALLOWED_ORIGINS = "https://opera-o-lua-de-mel.pages.dev,https://lua-de-mel.andrejosemeurer.workers.dev"
 # IP divulgado pela Efí para envio de webhooks (dev.efipay.com.br/docs/api-pix/webhooks)
 EFI_WEBHOOK_IPS = "34.193.116.226"
+# Intermediário mTLS fora do Cloudflare (pasta efi-proxy/, hospedado na Vercel)
+EFI_PROXY_URL = "https://efi-proxy-lua-de-mel.vercel.app/api/efi"
 
 # Certificado da Efí (produção). Para trocar: envie um novo com scripts/enviar-certificado.mjs e atualize o ID.
 [[mtls_certificates]]

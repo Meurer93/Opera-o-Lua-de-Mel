@@ -1,1 +1,1 @@
-{ "functions": { "api/efi.js": { "maxDuration": 25 } } }
+{ "regions": ["gru1"], "functions": { "api/efi.js": { "maxDuration": 25 } } }
