@@ -24,10 +24,18 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 | `efi-proxy/` | Intermediário mTLS (Vercel, região São Paulo) que repassa as chamadas à Efí com o certificado |
 | `index-antigo.html` | Versão antiga, preservada como backup |
 
+## Mural de carinho (aba Agradecimento)
+
+- No Pix, a caixa "Quero que meu nome e mensagem apareçam no mural" vem **desmarcada**.
+- Aparece no mural somente quem: marcou a caixa, preencheu o nome e teve o pagamento confirmado. Contribuições anônimas nunca aparecem, e os valores nunca são exibidos.
+- Quem não marcou fica visível só para o casal, em `GET /api/admin/pagamentos`.
+- Para ocultar um recado: `POST /api/admin/ocultar {"txid": "...", "oculto": true}`, com o `ADMIN_TOKEN`.
+
 ## Como funciona o movimento
 
-- **Carro:** posição linear no valor arrecadado (`total / 50.000`). Cada real é um pequeno avanço. Em R$ 50.000 ele para sob o arco "CONSEGUIMOS!".
-- **Paisagem:** interpolada entre os marcos, de modo que o cenário exibido é sempre o do trecho atual. A estrada é fixa e só os cenários mudam.
+- **Trechos por meta:** cada meta é um trecho da estrada. O arco de chegada mostra a próxima meta ("META N · R$ X"). O carro avança proporcionalmente ao valor dentro do trecho, desde o ponto de partida até o arco.
+- **Ao atingir uma meta,** o arco comemora, o carro volta ao ponto de partida e a paisagem passa para o próximo destino. Se uma contribuição cruza até 3 metas, as chegadas são animadas em sequência.
+- **Na meta final** (R$ 50.000) o arco mostra "CONSEGUIMOS! R$ 50.000 ♡".
 - **Pré-visualização sem dinheiro real:** acrescente `?simular=12500` ao endereço. Aparece um selo "Simulação" e nada é gravado.
 
 ## Adicionar fotos da viagem
@@ -85,7 +93,8 @@ Variáveis na Vercel (projeto `efi-proxy-lua-de-mel`): `PROXY_SECRET`, `EFI_CERT
 | Rota | Uso |
 |---|---|
 | `GET /api/total` | Total arrecadado (público) |
-| `POST /api/pix` `{valor, nome?, mensagem?}` | Cria a cobrança e devolve QR e copia-e-cola |
+| `POST /api/pix` `{valor, nome?, mensagem?, publico?}` | Cria a cobrança e devolve QR e copia-e-cola |
+| `GET /api/mural` | Recados públicos autorizados, sem valores |
 | `GET /api/pix/:txid` | Status da cobrança (consulta a Efí) |
 | `POST /api/webhook/efi?hmac=…` | Webhook da Efí |
 | `GET /api/saude` | Diagnóstico da configuração, sem segredos |

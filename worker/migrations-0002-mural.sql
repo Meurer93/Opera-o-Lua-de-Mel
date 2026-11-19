@@ -1,0 +1,3 @@
+-- Aplicada em 19/11/2026 no D1 de produção.
+ALTER TABLE cobrancas ADD COLUMN publico INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE cobrancas ADD COLUMN oculto INTEGER NOT NULL DEFAULT 0;

@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS cobrancas (
   criado_em       TEXT NOT NULL,
   expira_em       TEXT NOT NULL,
   verificado_em   TEXT,
-  ip_hash         TEXT
+  ip_hash         TEXT,
+  publico         INTEGER NOT NULL DEFAULT 0,       -- 1 = autorizou nome/mensagem no mural público
+  oculto          INTEGER NOT NULL DEFAULT 0        -- 1 = ocultado pelo admin (moderação)
 );
 CREATE INDEX IF NOT EXISTS idx_cobrancas_status ON cobrancas(status, criado_em);
 CREATE INDEX IF NOT EXISTS idx_cobrancas_ip ON cobrancas(ip_hash, criado_em);

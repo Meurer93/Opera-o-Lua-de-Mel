@@ -238,6 +238,22 @@ async function totalArrecadado(env) {
 }
 
 // ---------------------------------------------------------------- rotas
+/** Mural público: só pagamentos confirmados, com consentimento, nome preenchido e não ocultados. Sem valores. */
+async function rotaMural(env) {
+  const r = await env.DB.prepare(
+    `SELECT c.nome, c.mensagem, MIN(p.horario) AS horario
+       FROM cobrancas c JOIN pagamentos p ON p.txid = c.txid
+      WHERE c.publico = 1 AND c.oculto = 0 AND c.nome IS NOT NULL AND TRIM(c.nome) <> ''
+        AND (p.valor_centavos - p.devolvido_centavos) > 0
+      GROUP BY c.txid ORDER BY horario DESC LIMIT 300`
+  ).all();
+  return json(
+    { mensagens: r.results.map((m) => ({ nome: m.nome, mensagem: m.mensagem || null, data: String(m.horario).slice(0, 10) })) },
+    200,
+    { "Cache-Control": "public, max-age=30" }
+  );
+}
+
 async function rotaTotal(env) {
   const t = await totalArrecadado(env);
   return json(
@@ -265,6 +281,8 @@ async function rotaCriarPix(req, env, ctx) {
   const txid = crypto.randomUUID().replace(/-/g, ""); // 32 caracteres [a-f0-9] (regra Efí: 26–35 alfanuméricos)
   const nome = limparTexto(body?.nome, 60);
   const mensagem = limparTexto(body?.mensagem, 280);
+  // Mural público só com consentimento explícito E nome preenchido (anônimos nunca aparecem).
+  const publico = body?.publico === true && nome ? 1 : 0;
   let cob, qr;
   try {
     cob = await efi(env, "PUT", `/v2/cob/${txid}`, {
@@ -281,8 +299,8 @@ async function rotaCriarPix(req, env, ctx) {
   const criado = agoraISO();
   const expira = new Date(Date.now() + EXPIRACAO_S * 1000).toISOString();
   await env.DB.prepare(
-    "INSERT INTO cobrancas (txid, valor_centavos, nome, mensagem, status, criado_em, expira_em, ip_hash) VALUES (?, ?, ?, ?, 'ATIVA', ?, ?, ?)"
-  ).bind(txid, centavos, nome, mensagem, criado, expira, ipHash).run();
+    "INSERT INTO cobrancas (txid, valor_centavos, nome, mensagem, status, criado_em, expira_em, ip_hash, publico) VALUES (?, ?, ?, ?, 'ATIVA', ?, ?, ?, ?)"
+  ).bind(txid, centavos, nome, mensagem, criado, expira, ipHash, publico).run();
 
   return json({
     txid,
@@ -349,7 +367,7 @@ async function rotaAdmin(req, env, url) {
   const p = url.pathname;
   if (p === "/api/admin/pagamentos" && req.method === "GET") {
     const pag = await env.DB.prepare(
-      `SELECT p.e2eid, p.txid, p.valor_centavos, p.devolvido_centavos, p.horario, p.origem, c.nome, c.mensagem
+      `SELECT p.e2eid, p.txid, p.valor_centavos, p.devolvido_centavos, p.horario, p.origem, c.nome, c.mensagem, c.publico, c.oculto
        FROM pagamentos p LEFT JOIN cobrancas c ON c.txid = p.txid ORDER BY p.horario DESC LIMIT 500`
     ).all();
     const aj = await env.DB.prepare("SELECT * FROM ajustes ORDER BY id DESC").all();
@@ -366,6 +384,12 @@ async function rotaAdmin(req, env, url) {
     if (!Number.isFinite(c) || c === 0 || !d) return json({ erro: "dados_invalidos" }, 400);
     await env.DB.prepare("INSERT INTO ajustes (valor_centavos, descricao, criado_em) VALUES (?, ?, ?)").bind(c, d, agoraISO()).run();
     return json({ ok: true, total: await totalArrecadado(env) });
+  }
+  if (p === "/api/admin/ocultar" && req.method === "POST") {
+    const b = await req.json().catch(() => ({}));
+    if (!/^[A-Za-z0-9]{26,35}$/.test(String(b.txid || ""))) return json({ erro: "txid_invalido" }, 400);
+    const r = await env.DB.prepare("UPDATE cobrancas SET oculto = ? WHERE txid = ?").bind(b.oculto === false ? 0 : 1, b.txid).run();
+    return json({ ok: r.meta.changes === 1 });
   }
   if (p === "/api/admin/conciliar" && req.method === "POST") {
     return json(await conciliar(env, 24 * 7));
@@ -435,6 +459,7 @@ export default {
     try {
       const p = url.pathname.replace(/\/+$/, "");
       if (p === "/api/total" && req.method === "GET") res = await rotaTotal(env);
+      else if (p === "/api/mural" && req.method === "GET") res = await rotaMural(env);
       else if (p === "/api/pix" && req.method === "POST") res = await rotaCriarPix(req, env, ctx);
       else if (p.startsWith("/api/pix/") && req.method === "GET") res = await rotaStatusPix(env, p.slice(9), ctx);
       else if (p.startsWith("/api/webhook/efi") && req.method === "POST") return await rotaWebhook(req, env, ctx);

@@ -16,7 +16,8 @@
   let total = 0;          // valor real (ou simulado) em reais
   let exibido = 0;        // valor exibido durante a animação
   let explorando = null;
-  let cenaAtual = -1;    // índice da cena centralizada (para animar a placa ao chegar)  // índice de cena quando o visitante navega com ‹ ›
+  let cenaAtual = -1;
+  let trechoAtual = -1, trechoFinal = false; // trecho (meta) em que o carro está    // índice da cena centralizada (para animar a placa ao chegar)  // índice de cena quando o visitante navega com ‹ ›
 
   // ------------------------------------------------------------ cenários + placas
   const trilho = $("#trilho"), estrada = $("#estrada");
@@ -35,15 +36,16 @@
     });
   }
 
-  // Posição da paisagem: interpolada entre marcos (cada cena = um destino).
-  function posicaoCena(v) {
-    // cena 0 = marco 1 (Itapema); entre dois marcos a paisagem desliza proporcionalmente
-    if (v <= D[0].meta) return 0;
-    for (let i = 1; i < D.length; i++) {
-      if (v < D[i].meta) return i - 1 + (v - D[i - 1].meta) / (D[i].meta - D[i - 1].meta);
-    }
-    return D.length - 1;
+  // Trecho da estrada: cada meta é um trecho próprio. O carro sai do início e vai até o arco
+  // da próxima meta; ao atingi-la, volta ao ponto de partida no trecho seguinte.
+  function trecho(v) {
+    const k = D.findIndex((d) => d.meta > v);
+    if (k < 0) return { k: D.length - 1, frac: 1, final: true };
+    const ini = k ? D[k - 1].meta : 0;
+    return { k, frac: Math.min(1, Math.max(0, (v - ini) / (D[k].meta - ini))), final: false };
   }
+  // A paisagem mostra o destino do trecho atual (o que o carro está indo alcançar).
+  function posicaoCena(v) { return trecho(v).k; }
 
   function medidas() {
     const w = estrada.clientWidth;
@@ -62,14 +64,25 @@
       if (pl && !reduzMov) { pl.classList.remove("chegou"); void pl.offsetWidth; pl.classList.add("chegou"); }
     }
     trilho.style.transform = `translate3d(${-pos * w * 0.88}px,0,0)`;
-    // carro: proporcional ao valor (linear, cada real = um pequeno avanço)
+    // carro: proporcional ao valor dentro do trecho da meta atual (cada real = um pequeno avanço)
+    const t = trecho(v);
     const carro = $("#carro"), cw = carro.offsetWidth;
-    const chegada = $(".chegada"), aw = chegada.offsetWidth;
+    const chegada = $("#chegada"), aw = chegada.offsetWidth;
     const x0 = cw / 2 + 6, x1 = w - w * 0.015 - aw / 2;
-    const frac = Math.min(1, Math.max(0, v / META));
-    carro.style.left = x0 + (x1 - x0) * frac + "px";
+    carro.style.left = x0 + (x1 - x0) * t.frac + "px";
     $("#balao").textContent = brl(v);
-    $("#balao").hidden = frac >= 1;
+    $("#balao").hidden = t.final;
+    if (t.k !== trechoAtual || t.final !== trechoFinal) {
+      // novo trecho: arco passa a ser o da próxima meta e o carro volta ao ponto de partida
+      const voltou = trechoAtual !== -1 && t.k > trechoAtual;
+      trechoAtual = t.k; trechoFinal = t.final;
+      chegada.classList.toggle("final", t.final);
+      $("#faixa-chegada").innerHTML = t.final
+        ? "CONSEGUIMOS!<br>R$ 50.000 ♡"
+        : `<small>META ${t.k + 1}</small>${brl(D[t.k].meta)} ♡`;
+      chegada.setAttribute("aria-label", t.final ? "Chegada: CONSEGUIMOS! R$ 50.000" : `Chegada da meta ${t.k + 1}: ${D[t.k].nome}, ${brl(D[t.k].meta)}`);
+      if (voltou && !reduzMov) { carro.classList.remove("reinicio"); void carro.offsetWidth; carro.classList.add("reinicio"); }
+    }
   }
 
   function atualizarPainel(v) {
@@ -90,23 +103,51 @@
     renderMarcos(v);
   }
 
-  // animação contínua do valor (carro "dirige" até a nova posição)
-  let raf = null;
-  function animarAte(alvo, dur = 2200) {
-    cancelAnimationFrame(raf);
-    const ini = exibido, t0 = performance.now();
-    if (reduzMov || Math.abs(alvo - ini) < 0.01) { exibido = alvo; desenhar(alvo); atualizarPainel(alvo); return; }
+  // animação do valor: o carro dirige até o arco; se a meta for atingida, comemora,
+  // volta ao início e segue pelo trecho seguinte.
+  let raf = null, filaAnim = null;
+  function animarTrecho(de, ate, dur, fim) {
+    const t0 = performance.now();
     estrada.classList.add("andando");
     const passo = (t) => {
       const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
-      exibido = ini + (alvo - ini) * e;
+      exibido = de + (ate - de) * e;
       desenhar(exibido);
       $("#arrecadado").textContent = brl(exibido);
-      $("#balao").textContent = brl(exibido);
       if (k < 1) raf = requestAnimationFrame(passo);
-      else { estrada.classList.remove("andando"); exibido = alvo; atualizarPainel(alvo); desenhar(alvo); }
+      else { estrada.classList.remove("andando"); exibido = ate; desenhar(ate); fim(); }
     };
     raf = requestAnimationFrame(passo);
+  }
+  function animarAte(alvo, dur = 2200) {
+    cancelAnimationFrame(raf); clearTimeout(filaAnim);
+    const concluir = () => { exibido = alvo; desenhar(alvo); atualizarPainel(alvo); };
+    if (reduzMov || Math.abs(alvo - exibido) < 0.01) return concluir();
+    const tIni = trecho(exibido), tAlvo = trecho(alvo);
+    const metasCruzadas = (tAlvo.final ? D.length : tAlvo.k) - tIni.k;
+    if (alvo < exibido || metasCruzadas === 0) return animarTrecho(exibido, alvo, dur, concluir);
+    if (metasCruzadas > 3) {
+      // muitos trechos de uma vez (ex.: primeira visita): começa direto no trecho atual
+      const inicio = tAlvo.final ? D[D.length - 1].meta - 0.0001 : (tAlvo.k ? D[tAlvo.k - 1].meta : 0);
+      exibido = inicio; desenhar(inicio);
+      return animarTrecho(inicio, alvo, dur, concluir);
+    }
+    // até 3 metas: chega a cada arco, comemora, volta ao início e segue
+    const passo = dur * (metasCruzadas > 1 ? 0.4 : 0.6);
+    const proximaMeta = () => {
+      const t = trecho(exibido);
+      const meta = D[t.k].meta;
+      if (t.final || alvo < meta) return animarTrecho(exibido, alvo, passo, concluir);
+      animarTrecho(exibido, meta - 0.0001, passo, () => {
+        const ch = $("#chegada"); ch.classList.remove("festeja"); void ch.offsetWidth; ch.classList.add("festeja");
+        filaAnim = setTimeout(() => {
+          exibido = meta; desenhar(meta); atualizarPainel(meta);
+          if (alvo <= meta) return concluir();
+          proximaMeta();
+        }, 900);
+      });
+    };
+    proximaMeta();
   }
 
   // ------------------------------------------------------------ lista de marcos
@@ -243,7 +284,7 @@
     if (!API || pixPronto === false) return erroPix("O Pix automático está sendo configurado. Volte em breve! ♡");
     const btn = $("#pix-gerar"); btn.disabled = true; btn.textContent = "Gerando Pix…";
     try {
-      const r = await fetch(`${API}/api/pix`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ valor, nome: $("#pix-nome").value, mensagem: $("#pix-msg").value }) });
+      const r = await fetch(`${API}/api/pix`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ valor, nome: $("#pix-nome").value, mensagem: $("#pix-msg").value, publico: $("#pix-publico").checked }) });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.mensagem || "Não foi possível gerar o Pix agora.");
       cobranca = d;
@@ -331,6 +372,16 @@
   $("#lightbox").addEventListener("touchstart", (e) => (lbX = e.touches[0].clientX), { passive: true });
   $("#lightbox").addEventListener("touchend", (e) => { if (lbX === null) return; const dx = e.changedTouches[0].clientX - lbX; lbX = null; if (Math.abs(dx) > 50) mostrarFoto(fotoAtual + (dx < 0 ? 1 : -1)); }, { passive: true });
 
+  // ------------------------------------------------------------ mural de carinho
+  async function carregarMural() {
+    const box = $("#mural-lista");
+    let lista = [];
+    if (API) { try { const r = await fetch(`${API}/api/mural`, { cache: "no-store" }); if (r.ok) lista = (await r.json()).mensagens || []; } catch (_) {} }
+    if (!lista.length) { box.innerHTML = `<div class="mural-vazio">Ainda não há recados públicos. Ao contribuir, marque a opção do mural para deixar seu nome e sua mensagem aqui. ♡</div>`; return; }
+    const fmtData = (d) => { const [a, m, dd] = d.split("-"); return `${dd}/${m}/${a}`; };
+    box.innerHTML = lista.map((m) => `<blockquote class="recado">${m.mensagem ? `<p>${esc(m.mensagem)}</p>` : ""}<footer>${esc(m.nome)}<time datetime="${esc(m.data)}">${fmtData(m.data)}</time></footer></blockquote>`).join("");
+  }
+
   // ------------------------------------------------------------ abas
   const abas = $$(".aba"), mapa = { jornada: "aba-jornada", fotos: "aba-fotos", agradecimento: "aba-agradecimento" };
   let fotosCarregadas = false;
@@ -339,6 +390,7 @@
     abas.forEach((a) => { const sel = a.id === mapa[id]; a.setAttribute("aria-selected", String(sel)); a.tabIndex = sel ? 0 : -1; if (sel && foco) a.focus(); });
     $$(".painel").forEach((p) => (p.hidden = p.id !== id));
     if (id === "fotos" && !fotosCarregadas) { fotosCarregadas = true; carregarFotos(); }
+    if (id === "agradecimento") carregarMural();
     if (id === "jornada") desenhar(exibido);
   }
   abas.forEach((a, i) => {

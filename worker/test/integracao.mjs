@@ -120,13 +120,31 @@ try {
   await new Promise((r) => setTimeout(r, 1500));
   ok((await api("/api/total")).d.totalCentavos === 100050, "cron de conciliação registra pagamento sem visitante na página");
 
+  // ---- mural de agradecimentos (consentimento)
+  const criar = (b) => api("/api/pix", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(b) });
+  const mPub = await criar({ valor: 20, nome: "Vó Maria", mensagem: "Sejam felizes!", publico: true });
+  const mPriv = await criar({ valor: 20, nome: "Tio Zé", mensagem: "Só pro casal", publico: false });
+  const mAnon = await criar({ valor: 20, publico: true });
+  const mNaoPago = await criar({ valor: 20, nome: "Prima Ana", publico: true });
+  [mPub, mPriv, mAnon].forEach((x, k) => pagar(x.d.txid, "E0000MURAL" + k, "20.00"));
+  for (const x of [mPub, mPriv, mAnon]) await fetch(`http://127.0.0.1:${API_PORT}/api/webhook/efi?hmac=segredo-hmac&ignorar=`, { method: "POST", body: JSON.stringify({ pix: [{ txid: x.d.txid }] }) });
+  await new Promise((r) => setTimeout(r, 1200));
+  r = await api("/api/mural");
+  const nomes = (r.d.mensagens || []).map((m) => m.nome);
+  ok(nomes.includes("Vó Maria"), "mural mostra quem autorizou e pagou");
+  ok(!nomes.includes("Tio Zé"), "mural NÃO mostra quem não autorizou");
+  ok(!nomes.includes("Prima Ana"), "mural NÃO mostra cobrança não paga");
+  ok(nomes.length === 1 && !JSON.stringify(r.d).includes("valor"), "anônimo não aparece e mural não expõe valores");
+  r = await api("/api/admin/ocultar", { method: "POST", headers: { Authorization: "Bearer adm", "content-type": "application/json" }, body: JSON.stringify({ txid: mPub.d.txid }) });
+  ok(r.d.ok && (await api("/api/mural")).d.mensagens.length === 0, "admin consegue ocultar mensagem do mural");
+
   r = await api("/api/admin/pagamentos");
   ok(r.s === 401, "rota admin exige token");
   r = await api("/api/admin/pagamentos", { headers: { Authorization: "Bearer adm" } });
-  ok(r.s === 200 && r.d.pagamentos.length === 3 && r.d.pagamentos.some((p) => p.nome === "Tia bAna/b"), "histórico com 3 pagamentos e texto saneado");
+  ok(r.s === 200 && r.d.pagamentos.length === 6 && r.d.pagamentos.some((p) => p.nome === "Tia bAna/b") && r.d.pagamentos.some((p) => p.nome === "Tio Zé" && p.publico === 0), "histórico completo para o admin (inclui mensagens privadas) e texto saneado");
 
   r = await api("/api/admin/ajuste", { method: "POST", headers: { Authorization: "Bearer adm", "content-type": "application/json" }, body: JSON.stringify({ valor: 300, descricao: "Presente em dinheiro na festa" }) });
-  ok(r.s === 200 && r.d.total.centavos === 130050, "ajuste manual soma no total");
+  ok(r.s === 200 && r.d.total.centavos === 136050, "ajuste manual soma no total");
   ok(tokenCalls === 1, `token OAuth reutilizado (chamadas: ${tokenCalls})`);
 } finally {
   try { process.kill(-dev.pid, "SIGTERM"); } catch { dev.kill("SIGTERM"); }
