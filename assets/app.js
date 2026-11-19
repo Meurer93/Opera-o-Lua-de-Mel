@@ -6,8 +6,8 @@
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const brl = (n, dec = 0) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: dec, maximumFractionDigits: dec });
   const num2 = (i) => String(i + 1).padStart(2, "0");
-  const imgDestino = (i) => D[i].ilustracao || `img/destinos/${num2(i)}.webp`;
-  const imgPostal = (i) => `img/destinos/${num2(i)}.webp`;
+  const imgCena = (i) => `assets/scenes/${num2(i)}-${D[i].slug}.webp`;   // paisagem do destino
+  const imgNoivos = (i) => D[i].noivos || "assets/characters/casal-aquarela.webp"; // caricatura do casal
   const reduzMov = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ------------------------------------------------------------ estado
@@ -15,18 +15,19 @@
   const simulado = params.has("simular") ? Math.max(0, Math.min(META, Number(params.get("simular")) || 0)) : null;
   let total = 0;          // valor real (ou simulado) em reais
   let exibido = 0;        // valor exibido durante a animação
-  let explorando = null;  // índice de cena quando o visitante navega com ‹ ›
+  let explorando = null;
+  let cenaAtual = -1;    // índice da cena centralizada (para animar a placa ao chegar)  // índice de cena quando o visitante navega com ‹ ›
 
   // ------------------------------------------------------------ cenários + placas
   const trilho = $("#trilho"), estrada = $("#estrada");
   const cenas = [];
   function montarCenas() {
     // Paisagens pintadas (img/cenarios/00 = abertura, 01..20 = destinos). As próximas carregam sob demanda.
-    const fundo = (n, prioridade) => `<img class="fundo-cena" src="img/cenarios/${n}.webp" alt="" ${prioridade ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="744" height="416">`;
+    const fundo = (i, prioridade) => `<img class="fundo-cena" src="${imgCena(i)}" alt="" ${prioridade ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="372" height="208">`;
     D.forEach((d, i) => {
       const el = document.createElement("div");
       el.className = "cena";
-      el.innerHTML = fundo(num2(i), i < 2) +
+      el.innerHTML = fundo(i, i < 2) +
         `<button type="button" class="placa madeira" data-i="${i}" aria-label="Marco ${i + 1}: ${d.nome}, ${brl(d.meta)}. Ver experiência">` +
         `<span class="num"><b>${i + 1}</b></span><span class="nome"><span class="ic" aria-hidden="true">${d.icone}</span>${d.nome}</span><span class="preco">${brl(d.meta)}</span></button>`;
       trilho.appendChild(el);
@@ -54,6 +55,12 @@
     const w = medidas();
     // paisagem
     const pos = explorando !== null ? explorando : posicaoCena(v);
+    const atual = Math.round(pos);
+    if (atual !== cenaAtual) {
+      cenaAtual = atual;
+      const pl = cenas[atual] && cenas[atual].querySelector(".placa");
+      if (pl && !reduzMov) { pl.classList.remove("chegou"); void pl.offsetWidth; pl.classList.add("chegou"); }
+    }
     trilho.style.transform = `translate3d(${-pos * w * 0.88}px,0,0)`;
     // carro: proporcional ao valor (linear, cada real = um pequeno avanço)
     const carro = $("#carro"), cw = carro.offsetWidth;
@@ -108,7 +115,7 @@
     const prox = D.findIndex((d) => d.meta > v);
     if (!ol.children.length) {
       ol.innerHTML = D.map((d, i) =>
-        `<li><button type="button" class="marco" data-i="${i}"><span class="foto"><img src="${imgDestino(i)}" alt="" loading="lazy" decoding="async"><span class="n">${i + 1}</span></span>` +
+        `<li><button type="button" class="marco" data-i="${i}"><span class="foto"><img src="${imgNoivos(i)}" alt="" loading="lazy" decoding="async"><span class="n">${i + 1}</span></span>` +
         `<span class="txt"><strong>${d.icone} ${d.nome}</strong><span class="reg">${d.regiao}</span><span class="v">${brl(d.meta)}</span><span class="chip"></span></span></button></li>`).join("");
     }
     $$(".marco", ol).forEach((b) => {
@@ -128,22 +135,30 @@
 
   function abrirDestino(i) {
     const d = D[i], v = total, ok = v >= d.meta;
-    $("#md-img").src = imgDestino(i);
-    $("#md-img").alt = `Ilustração: ${d.nome}`;
-    $("#md-legenda").textContent = `André e Érika · ${d.nome}`;
-    document.querySelector("#modal-destino .casal").hidden = !!d.ilustracao;
-    $("#md-regiao").textContent = `Marco ${i + 1} · ${d.regiao}`;
+    const md = $("#modal-destino");
+    $("#md-cena").src = imgCena(i);
+    $("#md-cena").alt = `Paisagem ilustrada: ${d.nome}`;
+    $("#md-etapa").textContent = `Etapa ${i + 1} de ${D.length}`;
+    $("#md-regiao").textContent = d.regiao;
     $("#md-titulo").textContent = `${d.icone} ${d.nome}`;
-    $("#md-texto").textContent = d.texto;
+    $("#md-resumo").textContent = d.resumo;
+    $("#md-especial").textContent = d.especial;
+    $("#md-atrativos").innerHTML = d.atrativos.map((a) => `<li>${esc(a)}</li>`).join("");
+    $("#md-roteiro").innerHTML = d.roteiro.map(([q, t]) => `<li><b>${esc(q)}</b><span>${esc(t)}</span></li>`).join("");
+    $("#md-experiencia").textContent = d.experiencia;
+    const nv = $("#md-noivos");
+    nv.src = imgNoivos(i);
+    nv.alt = `Caricatura de André e Érika: ${d.nome}`;
     const est = $("#md-estado");
     const ant = i ? D[i - 1].meta : 0;
     const pctTrecho = Math.max(0, Math.min(100, ((v - ant) / (d.meta - ant)) * 100));
     est.className = "estado" + (ok ? " ok" : "");
     est.innerHTML = ok
       ? `✓ Experiência alcançada! Meta acumulada: ${brl(d.meta)}`
-      : `Meta acumulada: <b>${brl(d.meta)}</b><br>Faltam <b>${brl(d.meta - v)}</b> para chegarmos aqui.<div class="barra"><i style="width:${pctTrecho}%"></i></div>`;
-    $("#modal-destino [data-abrir-pix]").textContent = ok ? "💚 Ajude a seguir viagem" : "💚 Contribuir para chegarmos lá";
-    abrir($("#modal-destino"));
+      : `Meta acumulada: <b>${brl(d.meta)}</b> · faltam <b>${brl(d.meta - v)}</b> para chegarmos aqui.<div class="barra"><i style="width:${pctTrecho}%"></i></div>`;
+    $("#modal-destino [data-abrir-pix]").textContent = ok ? "♡ Ajude a seguir viagem" : "♡ Contribuir para chegarmos lá";
+    abrir(md);
+    md.scrollTop = 0;
   }
   trilho.addEventListener("click", (e) => { const p = e.target.closest(".placa"); if (p) abrirDestino(+p.dataset.i); });
   $("#marcos").addEventListener("click", (e) => { const p = e.target.closest(".marco"); if (p) abrirDestino(+p.dataset.i); });
@@ -274,7 +289,7 @@
   function confete() {
     if (reduzMov) return;
     const c = document.createElement("div"); c.className = "confete";
-    c.innerHTML = Array.from({ length: 28 }, (_, i) => `<i style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 0.8}s">${["💛", "🎉", "♥", "🌺", "✨"][i % 5]}</i>`).join("");
+    c.innerHTML = Array.from({ length: 28 }, (_, i) => `<i style="left:${Math.random() * 100}%;animation-delay:${Math.random() * 0.8}s">${["🍷", "♥", "🌺", "✨", "🥂"][i % 5]}</i>`).join("");
     document.body.appendChild(c); setTimeout(() => c.remove(), 4000);
   }
 

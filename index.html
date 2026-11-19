@@ -5,25 +5,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Operação Lua de Mel · André & Érika</title>
 <meta name="description" content="Ajude André e Érika a realizar a lua de mel dos sonhos. Cada contribuição faz o nosso carrinho avançar pela estrada!">
-<meta name="theme-color" content="#f7efe1">
+<meta name="theme-color" content="#65283B">
 <meta property="og:title" content="Operação Lua de Mel · André & Érika">
 <meta property="og:description" content="Cada real faz o nosso carrinho avançar pela estrada. Ajude a realizar nosso sonho! ♡">
-<meta property="og:image" content="https://opera-o-lua-de-mel.pages.dev/img/cenarios/01.webp">
+<meta property="og:image" content="https://opera-o-lua-de-mel.pages.dev/assets/scenes/01-piquenique-itapema.webp">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💛</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍷</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&family=Great+Vibes&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="carro.webp">
-<link rel="stylesheet" href="assets/estilo.css?v=5">
+<link rel="stylesheet" href="assets/estilo.css?v=6">
 </head>
 <body>
 <header class="topo">
-  <div class="letreiro madeira">
-    <h1>Operação Lua de Mel</h1>
-    <p>Ajude a realizar nosso sonho! <span class="coracao">♥</span></p>
-  </div>
-  <p class="sub">Cada contribuição faz o carrinho de <b>André e Érika</b> avançar pela estrada rumo à lua de mel dos sonhos.</p>
+  <img class="monograma" src="assets/ui/monograma.svg" width="64" height="64" alt="">
+  <p class="pre">Operação</p>
+  <h1>Lua de Mel</h1>
+  <p class="nomes">André &amp; Érika</p>
+  <img class="ramo" src="assets/ui/ramo-oliva.svg" width="240" height="40" alt="">
+  <p class="sub">Uma viagem construída junto com quem a gente ama. Cada contribuição leva o nosso carrinho um pouco mais longe na estrada.</p>
 </header>
 
 <nav class="abas" role="tablist" aria-label="Seções do site">
@@ -53,8 +54,8 @@
       <div class="pista" aria-hidden="true">
         <svg viewBox="0 0 1000 220" preserveAspectRatio="none">
           <defs>
-            <linearGradient id="asfalto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d5651"/><stop offset="1" stop-color="#3d3835"/></linearGradient>
-            <linearGradient id="grama" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8dbb5f"/><stop offset="1" stop-color="#6c9f4a"/></linearGradient>
+            <linearGradient id="asfalto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b524b"/><stop offset="1" stop-color="#3e3833"/></linearGradient>
+            <linearGradient id="grama" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#94b65c"/><stop offset="1" stop-color="#6f9442"/></linearGradient>
           </defs>
           <path d="M0 18 Q60 4 120 16 T240 14 T360 18 T480 12 T600 18 T720 12 T840 18 T1000 12 L1000 60 L0 60Z" fill="url(#grama)"/>
           <rect x="0" y="40" width="1000" height="10" fill="#c9c2b8"/>
@@ -65,7 +66,7 @@
           <rect x="0" y="50" width="1000" height="150" fill="url(#asfalto)"/>
           <rect x="0" y="58" width="1000" height="5" fill="#f3efe6"/>
           <rect x="0" y="186" width="1000" height="5" fill="#f3efe6"/>
-          <path class="faixa-central" d="M0 124 H1000" stroke="#f6c94e" stroke-width="6" stroke-dasharray="60 50"/>
+          <path class="faixa-central" d="M0 124 H1000" stroke="#f2cf6b" stroke-width="6" stroke-dasharray="60 50"/>
           <path d="M0 200 Q80 192 160 202 T320 200 T480 204 T640 198 T800 204 T1000 200 L1000 220 L0 220Z" fill="#7aa952"/>
         </svg>
       </div>
@@ -84,17 +85,17 @@
         <button type="button" id="cena-prox" aria-label="Ver próximo destino">›</button>
       </div>
     </div>
-    <div class="cta"><button class="btn btn-pix" id="btn-contribuir" type="button">💚 Contribuir com Pix</button></div>
+    <div class="cta"><button class="btn btn-pix" id="btn-contribuir" type="button">♡ Contribuir com Pix</button></div>
     <p class="dica">Toque nas placas para ver cada experiência · use ‹ › para espiar os próximos destinos</p>
 
-    <h2 class="titulo-secao">Marcos da viagem</h2>
-    <p class="subtitulo">Os valores são acumulados: cada placa mostra o total arrecadado necessário para chegar até ela.</p>
+    <h2 class="titulo-secao"><small>o caminho</small>Marcos da viagem</h2>
+    <p class="subtitulo">Toque em um destino para descobrir a história de cada parada. Os valores são acumulados: cada placa mostra o total necessário para chegar até ela.</p>
     <ol class="marcos" id="marcos"></ol>
   </section>
 
   <!-- ================= FOTOS ================= -->
   <section class="painel" id="fotos" role="tabpanel" aria-labelledby="aba-fotos" hidden>
-    <h2 class="titulo-secao">Fotos da viagem</h2>
+    <h2 class="titulo-secao"><small>diário de bordo</small>Fotos da viagem</h2>
     <p class="subtitulo">Quem fez parte dessa aventura vai acompanhar cada parada. As fotos aparecem aqui durante e depois da viagem.</p>
     <div class="filtros" id="filtros" role="toolbar" aria-label="Filtrar por destino"></div>
     <div id="albuns"></div>
@@ -102,10 +103,10 @@
 
   <!-- ================= AGRADECIMENTO ================= -->
   <section class="painel" id="agradecimento" role="tabpanel" aria-labelledby="aba-agradecimento" hidden>
-    <h2 class="titulo-secao">Nosso muito obrigado!</h2>
+    <h2 class="titulo-secao"><small>com carinho</small>Nosso muito obrigado!</h2>
     <article class="obrigado">
       <figure>
-        <img src="img/casal-aquarela.webp" width="900" height="651" loading="lazy" alt="Retrato em aquarela de André e Érika sorrindo, ela com uma flor de hibisco no cabelo">
+        <img src="assets/characters/casal-aquarela.webp" width="900" height="651" loading="lazy" alt="Retrato em aquarela de André e Érika sorrindo, ela com uma flor de hibisco no cabelo">
         <figcaption>Retrato em aquarela por Caliman</figcaption>
       </figure>
       <div class="texto">
@@ -114,27 +115,36 @@
         <p>Com carinho,<br><span class="assina">André e Érika ♡</span></p>
       </div>
     </article>
-    <p style="text-align:center;margin-top:18px"><button class="btn btn-terra" type="button" data-abrir-pix>💚 Quero contribuir</button></p>
+    <p style="text-align:center;margin-top:18px"><button class="btn btn-vinho" style="width:auto" type="button" data-abrir-pix>♡ Quero contribuir</button></p>
   </section>
 </main>
 
-<footer>Os marcos são experiências da nossa jornada. Obrigado por fazer parte dela. ♡<br><small>Pagamentos processados via Pix pela Efí.</small></footer>
+<footer class="rodape"><img class="ramo" src="assets/ui/ramo-oliva.svg" width="240" height="40" alt="">Os marcos são experiências da nossa jornada. Obrigado por fazer parte dela. ♡<br><small>Pagamentos processados via Pix pela Efí.</small></footer>
 
-<!-- Modal: destino -->
-<dialog id="modal-destino" aria-labelledby="md-titulo">
+<!-- Modal: destino (página de livro ilustrado) -->
+<dialog id="modal-destino" class="destino" aria-labelledby="md-titulo">
   <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
-  <div class="cartao">
-    <img class="fundo" id="md-img" alt="">
-    <img class="casal" src="carro.webp" alt="" aria-hidden="true">
-    <div class="coracoes" aria-hidden="true"><i style="left:20%">♥</i><i style="left:34%;animation-delay:1s">♥</i><i style="left:12%;animation-delay:2s">♥</i></div>
-    <div class="legenda madeira" id="md-legenda"></div>
+  <div class="capa"><img id="md-cena" alt="" width="372" height="208"><span class="etapa" id="md-etapa"></span></div>
+  <div class="cabeca">
+    <div class="regiao" id="md-regiao"></div>
+    <h2 id="md-titulo"></h2>
+    <p class="resumo" id="md-resumo"></p>
+    <img class="ramo" src="assets/ui/ramo-oliva.svg" width="240" height="40" alt="">
   </div>
   <div class="corpo">
-    <div class="reg" id="md-regiao"></div>
-    <h2 id="md-titulo"></h2>
-    <p id="md-texto"></p>
+    <section><p id="md-especial"></p></section>
+    <section><h3>O que vamos conhecer</h3><ul class="atrativos" id="md-atrativos"></ul></section>
+    <section><h3>Nosso roteiro</h3><ol class="roteiro" id="md-roteiro"></ol></section>
+    <section>
+      <h3>Nossa experiência</h3>
+      <div class="experiencia">
+        <figure class="noivos"><img id="md-noivos" alt="" width="300" height="250" decoding="async"><figcaption>André &amp; Érika</figcaption></figure>
+        <blockquote class="citacao"><span id="md-experiencia"></span><footer>— André e Érika</footer></blockquote>
+      </div>
+    </section>
     <div class="estado" id="md-estado"></div>
-    <button class="btn btn-pix" type="button" data-abrir-pix>💚 Contribuir para chegarmos lá</button>
+    <button class="btn btn-pix" type="button" data-abrir-pix>♡ Contribuir para chegarmos lá</button>
+    <p class="aviso-info">Roteiro sugerido; horários, valores e disponibilidade serão confirmados na época da viagem.</p>
   </div>
 </dialog>
 
@@ -159,7 +169,7 @@
     <h2>Pix de <span id="pix-valor-txt"></span></h2>
     <p>Abra o app do seu banco e escaneie o QR Code ou use o Pix Copia e Cola.</p>
     <div class="qr"><img id="pix-qr" alt="QR Code Pix"></div>
-    <div class="copia"><input id="pix-copia" readonly aria-label="Código Pix copia e cola"><button class="btn btn-terra" type="button" id="pix-copiar">Copiar</button></div>
+    <div class="copia"><input id="pix-copia" readonly aria-label="Código Pix copia e cola"><button class="btn btn-oliva" type="button" id="pix-copiar">Copiar</button></div>
     <div class="aguardando" id="pix-aguardando"><span class="giro"></span><span>Aguardando confirmação do pagamento…</span></div>
     <p class="aviso" id="pix-expira"></p>
   </div>
@@ -167,7 +177,7 @@
     <div class="festa">🎉🚗💛</div>
     <h2 style="text-align:center">Pagamento confirmado!</h2>
     <p style="text-align:center">Muito obrigado! Seu presente já fez o nosso carrinho avançar pela estrada. ♡</p>
-    <button class="btn btn-terra" style="width:100%" type="button" data-fechar>Ver o carrinho andando</button>
+    <button class="btn btn-oliva" style="width:100%" type="button" data-fechar>Ver o carrinho andando</button>
   </div>
 </dialog>
 
@@ -179,8 +189,8 @@
   <button class="nav prox" type="button" id="lb-prox" aria-label="Próxima foto">›</button>
 </dialog>
 
-<script src="assets/config.js?v=5"></script>
-<script src="assets/destinos.js?v=5"></script>
-<script src="assets/app.js?v=5"></script>
+<script src="assets/config.js?v=6"></script>
+<script src="assets/experiences/destinos.js?v=6"></script>
+<script src="assets/app.js?v=6"></script>
 </body>
 </html>

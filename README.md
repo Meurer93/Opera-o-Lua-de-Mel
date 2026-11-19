@@ -12,16 +12,15 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 |---|---|
 | `index.html` | Página única com as abas Nossa Jornada, Fotos da Viagem e Agradecimento |
 | `assets/estilo.css` | Visual (madeira, terracota, areia, sálvia), mobile-first |
-| `assets/destinos.js` | Os 20 marcos: valor acumulado, nome, ícone, região e texto |
-| `img/cenarios/NN.webp` | Paisagens pintadas (01–20, um por destino) que passam atrás da estrada |
+| `assets/experiences/destinos.js` | Os 20 destinos: valor acumulado, apresentação, atrativos, roteiro, experiência e caricatura |
+| `assets/scenes/NN-destino.webp` | Paisagens pintadas (fundo da estrada e capa do modal), na resolução original |
+| `assets/characters/NN-destino.webp` | 20 caricaturas dos noivos (pacote aprovado), sem filtros |
+| `assets/ui/` | Monograma, ramo de oliveira e textura de papel (SVG) |
 | `assets/app.js` | Estrada, carro, placas, modais, Pix, fotos e abas |
 | `assets/config.js` | Endereço público do backend (`apiBase`). Não contém segredos |
 | `carro.webp` | Ilustração aprovada do casal no BYD |
-| `img/destinos/NN.webp` | Cartões-postais de cada destino (recortes das artes aprovadas) |
-| `img/casal-aquarela.webp` | Retrato em aquarela usado no Agradecimento |
 | `fotos/fotos.json` | Álbuns de fotos reais da viagem |
 | `worker/` | Worker `lua-de-mel`: API Pix com D1 e cron (`npm run deploy`) |
-| `img/ilustracoes/NN.webp` | Caricaturas do casal nas experiências (8 de 20, recortadas das artes aprovadas) |
 | `efi-proxy/` | Intermediário mTLS (Vercel, região São Paulo) que repassa as chamadas à Efí com o certificado |
 | `index-antigo.html` | Versão antiga, preservada como backup |
 
@@ -43,9 +42,18 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 
 Álbuns sem fotos não aparecem no site. O Cloudflare publica sozinho depois do commit.
 
-## Trocar a ilustração de um destino
+## Identidade visual
 
-Para usar uma caricatura própria do casal em um destino, salve a imagem em `img/ilustracoes/` e acrescente `ilustracao: "img/ilustracoes/05.webp"` ao destino correspondente em `assets/destinos.js`.
+- **Interface:** vinho `#65283B`, verde-oliva `#687044`, verde profundo `#343B2C`, champagne `#E8D9BD`, dourado envelhecido `#B89562` e marfim `#F7F1E6`.
+- **Tipografia:** Cormorant Garamond nos títulos, Great Vibes nos detalhes manuscritos e Nunito Sans nos textos.
+- **Ilustrações:** paisagens e caricaturas não recebem filtro nem camada de cor.
+
+## Trocar uma imagem
+
+- **Paisagem:** substitua `assets/scenes/NN-destino.webp` mantendo o mesmo nome.
+- **Caricatura:** substitua `assets/characters/NN-destino.webp`.
+
+As 20 paisagens estão na resolução original recebida (cerca de 372×208 px). Se existirem versões maiores, basta trocar os arquivos para ficarem nítidas também no computador.
 
 ## Backend Pix (pasta `worker/`)
 
