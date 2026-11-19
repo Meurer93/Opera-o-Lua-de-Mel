@@ -72,7 +72,7 @@ main{max-width:1120px;margin:0 auto;padding:0 0 30px}
 .cena{position:relative;flex:0 0 var(--cena-w);height:100%;margin-left:calc(var(--cena-w) * -.12);
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
 .cena:first-child{margin-left:0}
-.cena svg{position:absolute;inset:0;width:100%;height:100%}
+.cena .fundo-cena{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%;background:#e9d6b8}
 .placa{position:absolute;z-index:2;right:7%;top:6%;width:min(47%,250px);padding:7px 9px 8px 40px;text-align:left;border-radius:12px;font-weight:800;line-height:1.15;transform:rotate(1.2deg);transition:transform .2s}
 .placa:hover{transform:rotate(0) scale(1.03)}
 .placa:after{content:"";position:absolute;left:50%;top:100%;width:9px;height:60vh;margin-left:-4.5px;background:linear-gradient(90deg,#5b331e,#8a5530 50%,#5b331e);z-index:-1;border-radius:2px}
@@ -98,6 +98,8 @@ main{max-width:1120px;margin:0 auto;padding:0 0 30px}
 .balao{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-2px);white-space:nowrap;background:#fffaf1;border:2px solid var(--madeira-esc);color:#7a1f1b;font-weight:900;font-size:13px;padding:2px 9px;border-radius:999px;box-shadow:0 2px 6px #0002}
 .balao:after{content:"";position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--madeira-esc)}
 
+.flores-estrada{position:absolute;z-index:3;bottom:-4px;width:clamp(70px,16vw,130px);pointer-events:none;filter:drop-shadow(0 2px 3px #0003)}
+.flores-estrada.esq{left:-10px}.flores-estrada.dir{right:-12px;transform:scaleX(-1)}
 .chegada{position:absolute;z-index:3;right:1.5%;bottom:3%;width:calc(var(--carro-w) * 1.02);height:calc(var(--carro-w) * 1.05);pointer-events:none}
 .chegada .postes{position:absolute;left:0;right:0;bottom:0;top:26%;border:8px solid #8a5530;border-bottom:0;border-radius:22px 22px 0 0;box-shadow:inset 0 0 0 2px #5b331e,0 0 0 2px #5b331e}
 .chegada .postes:before,.chegada .postes:after{content:"♥";position:absolute;top:8%;color:#e26a6a;font-size:18px}

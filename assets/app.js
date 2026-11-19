@@ -7,6 +7,7 @@
   const brl = (n, dec = 0) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: dec, maximumFractionDigits: dec });
   const num2 = (i) => String(i + 1).padStart(2, "0");
   const imgDestino = (i) => D[i].ilustracao || `img/destinos/${num2(i)}.webp`;
+  const imgPostal = (i) => `img/destinos/${num2(i)}.webp`;
   const reduzMov = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ------------------------------------------------------------ estado
@@ -20,15 +21,16 @@
   const trilho = $("#trilho"), estrada = $("#estrada");
   const cenas = [];
   function montarCenas() {
-    const svg = (inner) => `<svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${inner}</svg>`;
+    // Paisagens pintadas (img/cenarios/00 = abertura, 01..20 = destinos). As próximas carregam sob demanda.
+    const fundo = (n, prioridade) => `<img class="fundo-cena" src="img/cenarios/${n}.webp" alt="" ${prioridade ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="744" height="416">`;
     const abertura = document.createElement("div");
     abertura.className = "cena";
-    abertura.innerHTML = svg(window.LUA_CENARIOS.abertura());
+    abertura.innerHTML = fundo("00", true);
     trilho.appendChild(abertura);
     D.forEach((d, i) => {
       const el = document.createElement("div");
       el.className = "cena";
-      el.innerHTML = svg(window.LUA_CENARIOS.lista[i]()) +
+      el.innerHTML = fundo(num2(i), i < 2) +
         `<button type="button" class="placa madeira" data-i="${i}" aria-label="Marco ${i + 1}: ${d.nome}, ${brl(d.meta)}. Ver experiência">` +
         `<span class="num"><b>${i + 1}</b></span><span class="nome"><span class="ic" aria-hidden="true">${d.icone}</span>${d.nome}</span><span class="preco">${brl(d.meta)}</span></button>`;
       trilho.appendChild(el);
