@@ -117,7 +117,7 @@ async function registrarEvento(env, tipo, detalhe) {
 
 // ---------------------------------------------------------------- cliente Efí
 function efiConfigurada(env) {
-  return Boolean(env.EFI_CLIENT_ID && env.EFI_CLIENT_SECRET && env.EFI_PIX_KEY && (env.EFI_CERT || env.EFI_BASE_URL));
+  return Boolean(env.EFI_CLIENT_ID && env.EFI_CLIENT_SECRET && env.EFI_PIX_KEY && (env.EFI_PROXY_URL || env.EFI_CERT || env.EFI_BASE_URL));
 }
 
 function efiBase(env) {
@@ -125,7 +125,22 @@ function efiBase(env) {
 }
 
 function efiFetcher(env) {
-  // Em produção a chamada PRECISA sair pelo binding mTLS (certificado Efí).
+  // A API da Efí está atrás do Cloudflare, e o binding mTLS de Workers não apresenta
+  // certificado a destinos que também estão no Cloudflare (403 do WAF da Efí).
+  // Por isso, em produção, as chamadas passam por um intermediário mTLS fora do Cloudflare.
+  if (env.EFI_PROXY_URL && env.EFI_PROXY_SECRET) {
+    return async (url, init = {}) => {
+      const u = new URL(url);
+      const r = await fetch(env.EFI_PROXY_URL, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-proxy-auth": env.EFI_PROXY_SECRET },
+        body: JSON.stringify({ method: init.method || "GET", path: u.pathname + u.search, authorization: init.headers?.Authorization, body: init.body || null }),
+      });
+      if (!r.ok) return new Response(await r.text(), { status: r.status === 401 ? 500 : r.status });
+      const d = await r.json();
+      return new Response(d.body, { status: d.status, headers: { "content-type": "application/json" } });
+    };
+  }
   if (env.EFI_CERT) return (url, init) => env.EFI_CERT.fetch(url, init);
   if (env.EFI_BASE_URL) return (url, init) => fetch(url, init); // apenas mock local
   throw new Error("Certificado Efí (binding EFI_CERT) não configurado");
@@ -139,7 +154,13 @@ async function efiToken(env) {
     headers: { Authorization: `Basic ${basic}`, "Content-Type": "application/json" },
     body: JSON.stringify({ grant_type: "client_credentials" }),
   });
-  if (!r.ok) throw new Error(`OAuth Efí falhou: HTTP ${r.status}`);
+  if (!r.ok) {
+    const html = await r.text();
+    const titulo = (html.match(/<title>([^<]*)<\/title>/i) || [])[1] || "";
+    const codigo = (html.match(/(?:Error code|cf-error-code[^>]*>|Error)\s*([0-9]{3,4})/i) || [])[1] || "";
+    const corpo = titulo ? `[${titulo.trim()}] erro ${codigo} ray=${r.headers.get("cf-ray") || ""} server=${r.headers.get("server") || ""}` : html.slice(0, 300);
+    throw new Error(`OAuth Efí falhou: HTTP ${r.status} ${corpo}`);
+  }
   const d = await r.json();
   tokenCache = { token: d.access_token, expira: Date.now() + Math.max(60, (d.expires_in || 3600) - 120) * 1000 };
   return tokenCache.token;
@@ -414,7 +435,7 @@ async function rotaSaude(env) {
   return json({
     ok: true,
     banco: Boolean(env.DB),
-    efi: { ambiente: env.EFI_ENV || "producao", certificado: Boolean(env.EFI_CERT), credenciais: Boolean(env.EFI_CLIENT_ID && env.EFI_CLIENT_SECRET), chavePix: Boolean(env.EFI_PIX_KEY) },
+    efi: { ambiente: env.EFI_ENV || "producao", certificado: Boolean(env.EFI_PROXY_URL && env.EFI_PROXY_SECRET), intermediario: Boolean(env.EFI_PROXY_URL), credenciais: Boolean(env.EFI_CLIENT_ID && env.EFI_CLIENT_SECRET), chavePix: Boolean(env.EFI_PIX_KEY) },
     webhookProtegido: Boolean(env.WEBHOOK_HMAC),
     admin: Boolean(env.ADMIN_TOKEN),
   });

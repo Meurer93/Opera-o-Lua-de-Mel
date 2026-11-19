@@ -20,12 +20,10 @@ ALLOWED_ORIGINS = "https://opera-o-lua-de-mel.pages.dev,https://lua-de-mel.andre
 # IP divulgado pela Efí para envio de webhooks (dev.efipay.com.br/docs/api-pix/webhooks)
 EFI_WEBHOOK_IPS = "34.193.116.226"
 
-# Certificado da Efí (.p12 convertido para PEM). Depois de enviar com
-#   npx wrangler mtls-certificate upload --cert efi.crt.pem --key efi.key.pem --name efi-producao
-# descomente o bloco abaixo com o ID exibido:
-# [[mtls_certificates]]
-# binding = "EFI_CERT"
-# certificate_id = "COLE_O_ID_AQUI"
+# Certificado da Efí (produção). Para trocar: envie um novo com scripts/enviar-certificado.mjs e atualize o ID.
+[[mtls_certificates]]
+binding = "EFI_CERT"
+certificate_id = "9e1b9ac4-e3e7-4643-8b32-15d51a86753c"  # efi-producao-968088, expira em 19/11/2029
 
 # Segredos (NUNCA neste arquivo): defina no painel do Cloudflare ou com `wrangler secret put`
 #   EFI_CLIENT_ID, EFI_CLIENT_SECRET, EFI_PIX_KEY, WEBHOOK_HMAC, ADMIN_TOKEN
