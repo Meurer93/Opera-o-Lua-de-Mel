@@ -1,0 +1,8 @@
+{
+  "_como_adicionar": "Envie as imagens para a pasta fotos/ (de preferência .webp ou .jpg com até 1600px de largura) e acrescente cada uma no álbum do destino. Álbuns sem fotos não aparecem no site.",
+  "albuns": [
+    { "id": "partida", "titulo": "Preparativos e partida", "descricao": "", "fotos": [] },
+    { "id": "itapema", "titulo": "Piquenique em Itapema", "fotos": [] },
+    { "id": "por-do-sol", "titulo": "Pôr do sol e jantar a dois", "fotos": [] }
+  ]
+}

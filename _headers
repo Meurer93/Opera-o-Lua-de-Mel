@@ -1,0 +1,10 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+/img/*
+  Cache-Control: public, max-age=604800
+/carro.webp
+  Cache-Control: public, max-age=604800
+/fotos/fotos.json
+  Cache-Control: public, max-age=60
