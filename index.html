@@ -14,7 +14,13 @@ h1{font-size:clamp(2.3rem,8vw,4.6rem);line-height:.98;margin:12px auto;color:#78
 .car-scene{max-width:760px;margin:20px auto 0;position:relative}
 .road{height:112px;border-radius:60% 60% 0 0/30% 30% 0 0;background:#8a8173;position:relative;overflow:hidden;border-top:8px solid #d4c3a6}
 .road:after{content:"";position:absolute;left:0;right:0;top:52px;border-top:4px dashed #f7e8bd}
-.car{position:absolute;z-index:2;left:0;top:0;width:86px;height:52px;transform:translateX(0);transition:left .7s ease;display:grid;place-items:center;font-size:3.4rem;filter:drop-shadow(0 4px 2px #49332655)}
+.car{position:absolute;z-index:2;left:0;top:18px;width:82px;height:39px;transition:left .7s ease;filter:drop-shadow(0 4px 2px #49332655)}
+.car-body{position:absolute;left:3px;bottom:4px;width:76px;height:22px;background:#fff;border:2px solid #9b9b9b;border-radius:13px 18px 8px 8px}
+.car-body:before{content:"";position:absolute;left:17px;top:-15px;width:39px;height:17px;background:#fff;border:2px solid #9b9b9b;border-bottom:0;border-radius:13px 15px 0 0}
+.car-body:after{content:"";position:absolute;left:22px;top:-11px;width:30px;height:10px;background:#b9d2dc;border-radius:7px 8px 0 0}
+.wheel{position:absolute;bottom:0;width:15px;height:15px;background:#333;border:3px solid #aaa;border-radius:50%;z-index:2}
+.wheel.one{left:15px}.wheel.two{right:10px}
+.car-label{position:absolute;left:33px;bottom:10px;font: bold 5px Arial;color:#777;z-index:3}
 .road-label{position:absolute;z-index:3;top:74px;font: bold 11px Arial;color:white}.start{left:12px}.end{right:12px}
 main{max-width:900px;margin:-8px auto 40px;padding:0 16px;position:relative}
 .panel{background:var(--cream);border:1px solid #e4d3b9;border-radius:22px;padding:22px;margin:16px 0;box-shadow:0 8px 24px #60442a12}
@@ -33,7 +39,7 @@ h2{margin:0 0 14px;color:#78432e;font-size:1.5rem}.milestones{display:grid;grid-
   <h1>Operação<br>Lua de Mel ♡</h1>
   <p class="sub">Ajude a realizar nosso sonho — cada real leva o carrinho mais longe!</p>
   <div class="car-scene">
-    <div class="car" id="car" aria-label="Carro da viagem">🚙</div>
+    <div class="car" id="car" aria-label="Miniatura branca inspirada no BYD Dolphin Mini, apontando para a direita"><div class="car-body"></div><span class="wheel one"></span><span class="wheel two"></span><span class="car-label">BYD</span></div>
     <div class="road"><span class="road-label start">ITAPEMA</span><span class="road-label end">TAILÂNDIA</span></div>
   </div>
 </header>
@@ -71,7 +77,7 @@ const pct=Math.max(0,Math.min(100,demoValue/goal*100));
 document.getElementById('raised').textContent=demoValue.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 document.getElementById('bar').style.width=pct+'%';
 document.getElementById('progressText').textContent=pct.toFixed(1).replace('.',',')+'% da jornada percorrida · Demonstração visual, ainda sem pagamentos conectados.';
-document.getElementById('car').style.left=`calc(${pct}% - 43px)`;
+document.getElementById('car').style.left=`calc(${pct}% * (100% - 82px) / 100)`;
 document.querySelectorAll('.mile').forEach(el=>{if(demoValue>=Number(el.dataset.value)){el.classList.remove('locked');el.classList.add('unlocked')}});
 </script>
 </body>
