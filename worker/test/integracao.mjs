@@ -61,7 +61,7 @@ writeFileSync(".dev.vars", Object.entries(vars).map(([k, v]) => `${k}=${v}`).joi
 writeFileSync("wrangler.test.toml", readFileSync("wrangler.toml", "utf8").replace(/\[\[mtls_certificates\]\][^\[]*/s, ""));
 const run = (args) => new Promise((res, rej) => { const p = spawn("npx", ["wrangler", ...args], { stdio: "inherit" }); p.on("exit", (c) => (c ? rej(new Error("falhou " + args.join(" "))) : res())); });
 await run(["d1", "execute", "lua-de-mel", "--config", "wrangler.test.toml", "--local", "--persist-to", persist, "--file", "schema.sql"]);
-const dev = spawn("npx", ["wrangler", "dev", "--config", "wrangler.test.toml", "--port", String(API_PORT), "--persist-to", persist, "--test-scheduled"], { stdio: ["ignore", "pipe", "pipe"] });
+const dev = spawn("npx", ["wrangler", "dev", "--config", "wrangler.test.toml", "--port", String(API_PORT), "--persist-to", persist, "--test-scheduled"], { stdio: ["ignore", "pipe", "pipe"], detached: true });
 let log = ""; dev.stdout.on("data", (d) => (log += d)); dev.stderr.on("data", (d) => (log += d));
 for (let i = 0; i < 90; i++) { try { if ((await api("/api/saude")).s === 200) break; } catch {} await new Promise((r) => setTimeout(r, 1000)); }
 
@@ -129,7 +129,7 @@ try {
   ok(r.s === 200 && r.d.total.centavos === 130050, "ajuste manual soma no total");
   ok(tokenCalls === 1, `token OAuth reutilizado (chamadas: ${tokenCalls})`);
 } finally {
-  dev.kill("SIGTERM");
+  try { process.kill(-dev.pid, "SIGTERM"); } catch { dev.kill("SIGTERM"); }
   rmSync("wrangler.test.toml", { force: true }); rmSync(".dev.vars", { force: true });
   mock.close();
 }
