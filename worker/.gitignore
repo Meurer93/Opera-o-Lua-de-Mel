@@ -4,3 +4,4 @@ node_modules/
 *.pem
 *.p12
 src/site.generated.js
+wrangler.test.toml

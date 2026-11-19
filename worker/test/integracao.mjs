@@ -4,7 +4,7 @@
 // devolução, conciliação). Executar: npm test
 import http from "node:http";
 import { spawn } from "node:child_process";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -48,6 +48,7 @@ function pagar(txid, e2e, valor) {
 }
 
 let falhas = 0;
+const DEBUG = process.env.DEBUG_TEST;
 const ok = (cond, msg) => { console.log(`${cond ? "✔" : "✘"} ${msg}`); if (!cond) falhas++; };
 const api = (p, init = {}) => fetch(`http://127.0.0.1:${API_PORT}${p}`, init).then(async (r) => ({ s: r.status, d: await r.json().catch(() => null) }));
 
@@ -56,14 +57,17 @@ const persist = mkdtempSync(join(tmpdir(), "lua-d1-"));
 const vars = { EFI_BASE_URL: `http://127.0.0.1:${MOCK_PORT}`, EFI_CLIENT_ID: "cid", EFI_CLIENT_SECRET: "csecret", EFI_PIX_KEY: CHAVE, WEBHOOK_HMAC: "segredo-hmac", ADMIN_TOKEN: "adm", EFI_WEBHOOK_IPS: "" };
 writeFileSync(".dev.vars", Object.entries(vars).map(([k, v]) => `${k}=${v}`).join("\n"));
 
+// Cópia da configuração sem o certificado mTLS (que só existe no Cloudflare real).
+writeFileSync("wrangler.test.toml", readFileSync("wrangler.toml", "utf8").replace(/\[\[mtls_certificates\]\][^\[]*/s, ""));
 const run = (args) => new Promise((res, rej) => { const p = spawn("npx", ["wrangler", ...args], { stdio: "inherit" }); p.on("exit", (c) => (c ? rej(new Error("falhou " + args.join(" "))) : res())); });
-await run(["d1", "execute", "lua-de-mel", "--local", "--persist-to", persist, "--file", "schema.sql"]);
-const dev = spawn("npx", ["wrangler", "dev", "--port", String(API_PORT), "--persist-to", persist, "--test-scheduled"], { stdio: ["ignore", "pipe", "pipe"] });
+await run(["d1", "execute", "lua-de-mel", "--config", "wrangler.test.toml", "--local", "--persist-to", persist, "--file", "schema.sql"]);
+const dev = spawn("npx", ["wrangler", "dev", "--config", "wrangler.test.toml", "--port", String(API_PORT), "--persist-to", persist, "--test-scheduled"], { stdio: ["ignore", "pipe", "pipe"] });
 let log = ""; dev.stdout.on("data", (d) => (log += d)); dev.stderr.on("data", (d) => (log += d));
-for (let i = 0; i < 60; i++) { try { await api("/api/saude"); break; } catch { await new Promise((r) => setTimeout(r, 1000)); } }
+for (let i = 0; i < 90; i++) { try { if ((await api("/api/saude")).s === 200) break; } catch {} await new Promise((r) => setTimeout(r, 1000)); }
 
 try {
   let r = await api("/api/total");
+  if (DEBUG) console.log("DEBUG total:", r.s, JSON.stringify(r.d));
   ok(r.s === 200 && r.d.totalCentavos === 0, "total inicial é zero");
 
   r = await api("/api/pix", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ valor: 2 }) });
@@ -126,6 +130,7 @@ try {
   ok(tokenCalls === 1, `token OAuth reutilizado (chamadas: ${tokenCalls})`);
 } finally {
   dev.kill("SIGTERM");
+  rmSync("wrangler.test.toml", { force: true }); rmSync(".dev.vars", { force: true });
   mock.close();
 }
 if (falhas) { console.log(log.slice(-3000)); process.exit(1); }
