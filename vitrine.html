@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#65283B">
+<title>Vitrine · Operação Lua de Mel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Great+Vibes&family=Nunito+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--vinho:#65283B;--oliva:#687044;--verde:#343B2C;--champagne:#E8D9BD;--dourado:#B89562;--marfim:#F7F1E6}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#1b1416;font-family:"Nunito Sans",system-ui,sans-serif;color:var(--marfim)}
+.tela{position:fixed;inset:0;display:grid;grid-template-columns:1fr minmax(240px,32vw);cursor:pointer}
+.palco{position:relative;overflow:hidden}
+.fundo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.2s}
+.palco:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 55%,#0005)}
+.marca{position:absolute;left:3vmin;top:3vmin;z-index:3;background:#f7f1e6ee;border:1px solid var(--dourado);border-radius:18px;padding:1.2vmin 2.4vmin 1.6vmin;color:var(--vinho);text-align:center;box-shadow:0 6px 20px #0004}
+.marca small{display:block;font:800 1.5vmin/1 "Nunito Sans";letter-spacing:.3em;color:var(--oliva)}
+.marca b{display:block;font:400 6vmin/1.05 "Great Vibes",cursive}
+.marca span{font:700 2.3vmin "Cormorant Garamond",serif;color:var(--verde)}
+.estrada{position:absolute;left:0;right:0;bottom:0;height:30%;z-index:2}
+.estrada svg{width:100%;height:100%;display:block}
+.faixa{animation:faixa .6s linear infinite paused}
+.andando .faixa{animation-play-state:running}
+@keyframes faixa{to{stroke-dashoffset:-110}}
+.carro{position:absolute;z-index:4;bottom:3%;width:32%;max-width:420px;transform:translateX(-50%);left:20%}
+.carro img{width:100%;display:block;animation:bob 2.4s ease-in-out infinite}
+.andando .carro img{animation-duration:.35s}
+@keyframes bob{50%{transform:translateY(-2px)}}
+.arco{position:absolute;z-index:3;right:2%;bottom:3%;width:34%;max-width:440px;height:62%}
+.arco .postes{position:absolute;left:0;right:0;bottom:0;top:30%;border:1.1vmin solid #8a5530;border-bottom:0;border-radius:3vmin 3vmin 0 0}
+.arco .placa{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;background:linear-gradient(#e6c48f,#c9965c);border:2px solid #5e3a22;border-radius:12px;padding:.8vmin 2vmin;color:var(--vinho);font:900 2.6vmin/1.15 "Nunito Sans";text-align:center;box-shadow:0 4px 10px #0004}
+.arco .placa small{display:block;color:var(--oliva);font-size:.7em;letter-spacing:.12em}
+.lado{background:var(--marfim);color:var(--verde);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6vmin;padding:2.4vmin 2.4vmin;text-align:center;border-left:2px solid var(--dourado)}
+.lado .rumo{font:800 1.6vmin "Nunito Sans";letter-spacing:.24em;color:var(--oliva);text-transform:uppercase}
+.lado h1{margin:0;font:700 3.8vmin/1.08 "Cormorant Garamond",serif;color:var(--vinho)}
+.barra{width:100%;height:1.5vmin;border-radius:99px;background:var(--champagne);overflow:hidden}
+.barra i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--oliva),var(--vinho));transition:width 1.5s}
+.falta{font:700 2.2vmin "Nunito Sans"}
+.falta b{color:var(--vinho)}
+.qr{background:#fff;padding:1vmin;border-radius:14px;border:2px solid var(--dourado);width:min(36vmin,92%)}
+.qr img{width:100%;display:block}
+.cta{font:400 4.2vmin/1.05 "Great Vibes",cursive;color:var(--vinho)}
+.cta2{font:700 1.9vmin/1.3 "Nunito Sans";color:var(--verde);max-width:30ch}
+.total{font:700 2vmin "Nunito Sans";color:#6c6253}
+.ticker{position:absolute;left:0;right:0;bottom:0;z-index:5;background:#65283Bee;color:var(--marfim);font:700 2.2vmin "Nunito Sans";padding:1vmin 3vmin;white-space:nowrap;overflow:hidden}
+.ticker span{display:inline-block;padding-left:100%;animation:passa 40s linear infinite}
+@keyframes passa{to{transform:translateX(-100%)}}
+.dica-tela{position:absolute;top:2vmin;right:2vmin;z-index:6;background:#000a;color:#fff;font:700 1.6vmin "Nunito Sans";padding:.8vmin 1.4vmin;border-radius:99px}
+@media(orientation:portrait){.tela{grid-template-columns:1fr;grid-template-rows:55% 45%}.lado{border-left:0;border-top:2px solid var(--dourado)}.carro{width:42%}.arco{width:42%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="tela" id="tela" title="Toque para tela cheia">
+  <div class="palco" id="palco">
+    <img class="fundo" id="fundo" alt="">
+    <div class="marca"><small>OPERAÇÃO</small><b>Lua de Mel</b><span>André &amp; Érika</span></div>
+    <div class="estrada" aria-hidden="true">
+      <svg viewBox="0 0 1000 220" preserveAspectRatio="none">
+        <path d="M0 18 Q60 4 120 16 T240 14 T360 18 T480 12 T600 18 T720 12 T840 18 T1000 12 L1000 60 L0 60Z" fill="#7fa34f"/>
+        <rect x="0" y="40" width="1000" height="10" fill="#c9c2b8"/>
+        <rect x="0" y="50" width="1000" height="150" fill="#4a433e"/>
+        <rect x="0" y="58" width="1000" height="5" fill="#f3efe6"/><rect x="0" y="186" width="1000" height="5" fill="#f3efe6"/>
+        <path class="faixa" d="M0 124 H1000" stroke="#f2cf6b" stroke-width="6" stroke-dasharray="60 50"/>
+        <path d="M0 200 Q80 192 160 202 T320 200 T480 204 T640 198 T800 204 T1000 200 L1000 220 L0 220Z" fill="#6f9442"/>
+      </svg>
+    </div>
+    <div class="arco"><div class="postes"></div><div class="placa" id="placa-arco">META 1<br>R$ 50 ♡</div></div>
+    <div class="carro" id="carro"><img src="carro.webp" alt="André e Érika no carrinho"></div>
+    <div class="ticker" id="ticker"><span id="ticker-txt">Cada contribuição faz o nosso carrinho avançar ♡</span></div>
+    <div class="dica-tela" id="dica">Toque para tela cheia</div>
+  </div>
+  <aside class="lado">
+    <div class="rumo">Rumo a</div>
+    <h1 id="destino">Piquenique em Itapema</h1>
+    <div class="barra"><i id="barra"></i></div>
+    <div class="falta" id="falta">Faltam <b>R$ 50</b> para a próxima meta</div>
+    <div class="qr"><img src="assets/ui/qr-site.svg" alt="QR Code do site Operação Lua de Mel"></div>
+    <div class="cta">Aponte a câmera ♡</div>
+    <div class="cta2">e faça parte da nossa viagem de lua de mel</div>
+    <div class="total" id="total">Arrecadado: R$ 0 de R$ 50.000</div>
+  </aside>
+</div>
+<script src="assets/config.js?v=10"></script>
+<script src="assets/experiences/destinos.js?v=10"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.LUA_DESTINOS, META = window.LUA_META, API = ((window.LUA_CONFIG || {}).apiBase || "").replace(/\/+$/, "");
+  const $ = (s) => document.querySelector(s);
+  const brl = (n) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const sim = new URLSearchParams(location.search).get("simular");
+  let total = 0, frac = 0;
+
+  function trecho(v) {
+    const k = D.findIndex((d) => d.meta > v);
+    if (k < 0) return { k: D.length - 1, frac: 1, final: true };
+    const ini = k ? D[k - 1].meta : 0;
+    return { k, frac: (v - ini) / (D[k].meta - ini), final: false };
+  }
+  function posCarro(f) {
+    // de 14% (partida) até o centro do arco (~81%)
+    return 14 + (81 - 14) * Math.max(0, Math.min(1, f));
+  }
+  function render() {
+    const t = trecho(total), d = D[t.k];
+    frac = t.frac;
+    const src = `assets/scenes/${String(t.k + 1).padStart(2, "0")}-${d.slug}.webp`;
+    if ($("#fundo").getAttribute("src") !== src) $("#fundo").src = src;
+    $("#destino").textContent = t.final ? "Conseguimos! Nova Zelândia ♡" : `${d.icone} ${d.nome}`;
+    $("#placa-arco").innerHTML = t.final ? "CONSEGUIMOS!<br>R$ 50.000 ♡" : `<small>META ${t.k + 1}</small>${brl(d.meta)} ♡`;
+    $("#barra").style.width = Math.round(t.frac * 100) + "%";
+    $("#falta").innerHTML = t.final ? "Chegamos ao destino final! Obrigado ♡" : `Faltam <b>${brl(d.meta - total)}</b> para a próxima meta`;
+    $("#total").textContent = `Arrecadado: ${brl(total)} de ${brl(META)}`;
+  }
+  // Animação de atenção: o carro entra pela esquerda e dirige até a posição real da meta.
+  function dirigir() {
+    const c = $("#carro"), palco = $("#palco");
+    c.style.transition = "none"; c.style.left = "-25%";
+    void c.offsetWidth;
+    palco.classList.add("andando");
+    c.style.transition = "left 4.5s cubic-bezier(.25,.8,.25,1)";
+    c.style.left = posCarro(frac) + "%";
+    setTimeout(() => palco.classList.remove("andando"), 4500);
+  }
+  async function atualizarTotal() {
+    if (sim !== null) { total = Math.min(META, Math.max(0, Number(sim) || 0)); render(); return; }
+    try { const r = await fetch(API + "/api/total", { cache: "no-store" }); if (r.ok) { total = Math.min(META, Number((await r.json()).total) || 0); render(); } } catch (_) {}
+  }
+  async function atualizarMural() {
+    let frases = ["Cada contribuição faz o nosso carrinho avançar ♡", "Do piquenique em Itapema até a Nova Zelândia: 20 destinos, uma estrada", "Ao contribuir, deixe seu nome e um recado no nosso mural de carinho"];
+    try {
+      const r = await fetch(API + "/api/mural", { cache: "no-store" });
+      if (r.ok) { const m = (await r.json()).mensagens || []; frases = frases.concat(m.slice(0, 15).map((x) => `“${x.mensagem || "♡"}” — ${x.nome}`)); }
+    } catch (_) {}
+    $("#ticker-txt").textContent = frases.join("      ✦      ");
+  }
+  // Tela sempre acesa e tela cheia ao tocar
+  let wake = null;
+  async function manterAcesa() { try { if ("wakeLock" in navigator) wake = await navigator.wakeLock.request("screen"); } catch (_) {} }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) { manterAcesa(); atualizarTotal(); } });
+  $("#tela").addEventListener("click", async () => {
+    try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); } catch (_) {}
+    $("#dica").hidden = true; manterAcesa();
+  });
+
+  render(); atualizarTotal().then(dirigir); atualizarMural(); manterAcesa();
+  setInterval(atualizarTotal, 30000);
+  setInterval(atualizarMural, 300000);
+  setInterval(dirigir, 20000);
+})();
+</script>
+</body>
+</html>

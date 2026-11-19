@@ -35,6 +35,16 @@ Endereço: `/painel` (por exemplo, https://opera-o-lua-de-mel.pages.dev/painel).
 
 A página não é indexada por buscadores. A senha fica só na aba do navegador e é apagada ao clicar em "Sair" ou fechar a aba.
 
+## Vitrine (tela para passageiros e recepção)
+
+Endereço: `/vitrine` (por exemplo, https://opera-o-lua-de-mel.pages.dev/vitrine). É uma página em tela cheia para um celular ou tablet preso no encosto do banco ou na recepção. Ela mostra:
+
+- a paisagem e a meta atuais, com o carrinho entrando na estrada a cada 20 s;
+- um QR Code grande e os recados do mural passando no rodapé;
+- o total, atualizado a cada 30 s.
+
+Toque uma vez para entrar em tela cheia; a tela fica acesa enquanto a página estiver aberta. Para testar com outro valor, use `?simular=12500`. **Não usar na tela do carro no campo de visão de quem dirige.**
+
 ## Mural de carinho (aba Agradecimento)
 
 - No Pix, a caixa "Quero que meu nome e mensagem apareçam no mural" vem **desmarcada**.

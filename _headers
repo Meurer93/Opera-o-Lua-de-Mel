@@ -11,3 +11,5 @@
 /painel*
   X-Robots-Tag: noindex, nofollow
   Cache-Control: no-store
+/vitrine*
+  X-Robots-Tag: noindex, nofollow
