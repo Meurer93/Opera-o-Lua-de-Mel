@@ -23,10 +23,6 @@
   function montarCenas() {
     // Paisagens pintadas (img/cenarios/00 = abertura, 01..20 = destinos). As próximas carregam sob demanda.
     const fundo = (n, prioridade) => `<img class="fundo-cena" src="img/cenarios/${n}.webp" alt="" ${prioridade ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="744" height="416">`;
-    const abertura = document.createElement("div");
-    abertura.className = "cena";
-    abertura.innerHTML = fundo("00", true);
-    trilho.appendChild(abertura);
     D.forEach((d, i) => {
       const el = document.createElement("div");
       el.className = "cena";
@@ -40,12 +36,12 @@
 
   // Posição da paisagem: interpolada entre marcos (cada cena = um destino).
   function posicaoCena(v) {
-    if (v <= 0) return 0;
-    if (v < D[0].meta) return v / D[0].meta; // 0 = abertura, 1 = marco 1
+    // cena 0 = marco 1 (Itapema); entre dois marcos a paisagem desliza proporcionalmente
+    if (v <= D[0].meta) return 0;
     for (let i = 1; i < D.length; i++) {
-      if (v < D[i].meta) return i + (v - D[i - 1].meta) / (D[i].meta - D[i - 1].meta);
+      if (v < D[i].meta) return i - 1 + (v - D[i - 1].meta) / (D[i].meta - D[i - 1].meta);
     }
-    return D.length;
+    return D.length - 1;
   }
 
   function medidas() {
@@ -155,7 +151,7 @@
   // navegação manual pelas paisagens
   function explorar(delta) {
     const atual = explorando !== null ? explorando : Math.round(posicaoCena(exibido));
-    explorando = Math.max(0, Math.min(D.length, atual + delta));
+    explorando = Math.max(0, Math.min(D.length - 1, atual + delta));
     trilho.style.transition = "transform .6s cubic-bezier(.2,.8,.2,1)";
     $("#cena-voltar").hidden = false;
     desenhar(exibido);

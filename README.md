@@ -13,7 +13,7 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 | `index.html` | Página única com as abas Nossa Jornada, Fotos da Viagem e Agradecimento |
 | `assets/estilo.css` | Visual (madeira, terracota, areia, sálvia), mobile-first |
 | `assets/destinos.js` | Os 20 marcos: valor acumulado, nome, ícone, região e texto |
-| `img/cenarios/NN.webp` | Paisagens pintadas (00 = abertura, 01–20 = destinos) que passam atrás da estrada |
+| `img/cenarios/NN.webp` | Paisagens pintadas (01–20, um por destino) que passam atrás da estrada |
 | `assets/app.js` | Estrada, carro, placas, modais, Pix, fotos e abas |
 | `assets/config.js` | Endereço público do backend (`apiBase`). Não contém segredos |
 | `carro.webp` | Ilustração aprovada do casal no BYD |
