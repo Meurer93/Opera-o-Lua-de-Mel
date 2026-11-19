@@ -2,8 +2,8 @@
 
 Site de arrecadação da lua de mel de André e Érika. É uma estrada interativa em que o carrinho (BYD branco, placa "Nosso Sonho ❤️") avança conforme as contribuições via Pix (Efí).
 
-- **Versão nova publicada (Cloudflare Worker, site + API):** https://lua-de-mel.andrejosemeurer.workers.dev/
-- **Endereço antigo (Cloudflare Pages, ligado ao GitHub):** https://opera-o-lua-de-mel.pages.dev/. Passa a mostrar a versão nova quando este código chegar à branch `main`.
+- **Site oficial (Cloudflare Pages, publica automaticamente a branch `main`):** https://opera-o-lua-de-mel.pages.dev/
+- **API Pix (Cloudflare Worker `lua-de-mel`):** https://lua-de-mel.andrejosemeurer.workers.dev/api/... (a raiz redireciona para o site)
 - **Meta:** R$ 50.000, com 20 marcos de valor acumulado (ver `assets/destinos.js`, que não deve ser reordenado).
 
 ## Estrutura
@@ -13,14 +13,14 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 | `index.html` | Página única com as abas Nossa Jornada, Fotos da Viagem e Agradecimento |
 | `assets/estilo.css` | Visual (madeira, terracota, areia, sálvia), mobile-first |
 | `assets/destinos.js` | Os 20 marcos: valor acumulado, nome, ícone, região e texto |
-| `assets/cenarios.js` | 21 paisagens vetoriais (abertura + 1 por destino) que passam atrás da estrada |
+| `img/cenarios/NN.webp` | Paisagens pintadas (00 = abertura, 01–20 = destinos) que passam atrás da estrada |
 | `assets/app.js` | Estrada, carro, placas, modais, Pix, fotos e abas |
 | `assets/config.js` | Endereço público do backend (`apiBase`). Não contém segredos |
 | `carro.webp` | Ilustração aprovada do casal no BYD |
 | `img/destinos/NN.webp` | Cartões-postais de cada destino (recortes das artes aprovadas) |
 | `img/casal-aquarela.webp` | Retrato em aquarela usado no Agradecimento |
 | `fotos/fotos.json` | Álbuns de fotos reais da viagem |
-| `worker/` | Worker `lua-de-mel`: serve o site (embutido por `npm run build`) e a API Pix, com D1 |
+| `worker/` | Worker `lua-de-mel`: API Pix com D1 e cron (`npm run deploy`) |
 | `img/ilustracoes/NN.webp` | Caricaturas do casal nas experiências (8 de 20, recortadas das artes aprovadas) |
 | `efi-proxy/` | Intermediário mTLS (Vercel, região São Paulo) que repassa as chamadas à Efí com o certificado |
 | `index-antigo.html` | Versão antiga, preservada como backup |
@@ -111,7 +111,7 @@ O comando roda o Worker localmente contra uma Efí **simulada**: cria cobranças
 
    Coloque o ID exibido em `worker/wrangler.toml` (bloco `mtls_certificates`).
 3. Defina os segredos: `EFI_CLIENT_ID`, `EFI_CLIENT_SECRET`, `EFI_PIX_KEY`, `WEBHOOK_HMAC` e `ADMIN_TOKEN` (`npx wrangler secret put NOME`).
-4. Rode `cd worker && npm run deploy`, que gera o site embutido e publica o Worker. O `apiBase` em `assets/config.js` já aponta para `https://lua-de-mel.andrejosemeurer.workers.dev`.
+4. Rode `cd worker && npm run deploy`. O `apiBase` em `assets/config.js` já aponta para `https://lua-de-mel.andrejosemeurer.workers.dev`.
 5. Opcional: `POST /api/admin/webhook` para cadastrar o webhook.
 
 ### Custos

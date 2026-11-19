@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-11-01"
 workers_dev = true
 
-# O mesmo Worker serve o site (embutido por `npm run build`) e a API em /api/*.
+# Este Worker serve somente a API (/api/*); o site fica no Cloudflare Pages.
 
 # Conciliação a cada 5 minutos: reconsulta cobranças em aberto na API da Efí.
 [triggers]

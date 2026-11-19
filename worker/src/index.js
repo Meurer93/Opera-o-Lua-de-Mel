@@ -31,26 +31,11 @@ const MAX_COBRANCAS_POR_IP_10MIN = 6;
 
 let tokenCache = { token: null, expira: 0 };
 
-// ---------------------------------------------------------------- site estático embutido
-import SITE from "./site.generated.js";
-const SITE_CACHE = new Map();
-function servirSite(req, url) {
-  if (req.method !== "GET" && req.method !== "HEAD") return new Response("Método não permitido", { status: 405 });
-  let caminho = decodeURIComponent(url.pathname);
-  if (caminho.endsWith("/")) caminho += "index.html";
-  const f = SITE[caminho];
-  if (!f) return new Response("Página não encontrada", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
-  const etag = `"${f.e}"`;
-  const longo = /^\/(img\/|carro\.webp)/.test(caminho);
-  const headers = {
-    "content-type": f.t, etag,
-    "cache-control": longo ? "public, max-age=604800" : caminho.endsWith(".json") ? "public, max-age=60" : "public, max-age=300",
-    "x-content-type-options": "nosniff", "referrer-policy": "strict-origin-when-cross-origin",
-  };
-  if (req.headers.get("if-none-match") === etag) return new Response(null, { status: 304, headers });
-  let corpo = SITE_CACHE.get(caminho);
-  if (!corpo) { corpo = Uint8Array.from(atob(f.b), (c) => c.charCodeAt(0)); SITE_CACHE.set(caminho, corpo); }
-  return new Response(req.method === "HEAD" ? null : corpo, { headers });
+// ---------------------------------------------------------------- site
+// O site oficial é servido pelo Cloudflare Pages; este Worker é só a API.
+const SITE_OFICIAL = "https://opera-o-lua-de-mel.pages.dev";
+function servirSite(_req, url) {
+  return Response.redirect(SITE_OFICIAL + url.pathname + url.search, 301);
 }
 
 // ---------------------------------------------------------------- utilidades
