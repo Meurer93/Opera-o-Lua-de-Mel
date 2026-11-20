@@ -33,7 +33,7 @@ let tokenCache = { token: null, expira: 0 };
 
 // ---------------------------------------------------------------- site
 // O site oficial é servido pelo Cloudflare Pages; este Worker é só a API.
-const SITE_OFICIAL = "https://opera-o-lua-de-mel.pages.dev";
+const SITE_OFICIAL = "https://operacaoluademel.com";
 function servirSite(_req, url) {
   return Response.redirect(SITE_OFICIAL + url.pathname + url.search, 301);
 }

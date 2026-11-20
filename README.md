@@ -2,7 +2,7 @@
 
 Site de arrecadação da lua de mel de André e Érika. É uma estrada interativa em que o carrinho (BYD branco, placa "Nosso Sonho ❤️") avança conforme as contribuições via Pix (Efí).
 
-- **Site oficial (Cloudflare Pages, publica automaticamente a branch `main`):** https://opera-o-lua-de-mel.pages.dev/
+- **Site oficial:** https://operacaoluademel.com (Cloudflare Pages, publica automaticamente a branch `main`). O `www` e o antigo `opera-o-lua-de-mel.pages.dev` redirecionam para ele.
 - **API Pix (Cloudflare Worker `lua-de-mel`):** https://lua-de-mel.andrejosemeurer.workers.dev/api/... (a raiz redireciona para o site)
 - **Meta:** R$ 50.000, com 20 marcos de valor acumulado (ver `assets/destinos.js`, que não deve ser reordenado).
 
@@ -26,7 +26,7 @@ Site de arrecadação da lua de mel de André e Érika. É uma estrada interativ
 
 ## Painel do casal
 
-Endereço: `/painel` (por exemplo, https://opera-o-lua-de-mel.pages.dev/painel). A senha é o `ADMIN_TOKEN` salvo nos secrets do Worker. O painel mostra:
+Endereço: `/painel` (por exemplo, https://operacaoluademel.com/painel). A senha é o `ADMIN_TOKEN` salvo nos secrets do Worker. O painel mostra:
 
 - total, contribuições e lista com data, nome (ou "Anônimo"), valor, mensagem e situação no mural (público, privado ou oculto);
 - botão para ocultar ou mostrar recados no mural;
@@ -37,7 +37,7 @@ A página não é indexada por buscadores. A senha fica só na aba do navegador 
 
 ## Vitrine (tela para passageiros e recepção)
 
-Endereço: `/vitrine` (por exemplo, https://opera-o-lua-de-mel.pages.dev/vitrine). É uma página em tela cheia para um celular ou tablet preso no encosto do banco ou na recepção. Ela mostra:
+Endereço: `/vitrine` (por exemplo, https://operacaoluademel.com/vitrine). É uma página em tela cheia para um celular ou tablet preso no encosto do banco ou na recepção. Ela mostra:
 
 - a paisagem e a meta atuais, com o carrinho entrando na estrada a cada 20 s;
 - um QR Code grande e os recados do mural passando no rodapé;
