@@ -407,14 +407,15 @@
   (function gatinha() {
     const g = $("#gatinha"); if (!g) return;
     // aparece por alguns segundos, de tempos em tempos, em posições diferentes da estrada
+    // aparece raramente, por poucos segundos, só com orelhas e olhos à mostra
     const espiar = () => {
       if (document.hidden || $("#modal-gatinha").open) return;
-      g.style.left = (18 + Math.random() * 46) + "%";
+      g.style.left = (8 + Math.random() * 60) + "%";
       g.classList.add("espia");
-      setTimeout(() => g.classList.remove("espia"), 4500);
+      setTimeout(() => g.classList.remove("espia"), 3200);
     };
-    setTimeout(espiar, 6000);
-    setInterval(espiar, 22000);
+    setTimeout(espiar, 25000 + Math.random() * 15000);
+    setInterval(espiar, 60000 + Math.random() * 30000);
     g.addEventListener("click", () => { g.classList.remove("espia"); abrir($("#modal-gatinha")); if (!reduzMov) confete(); });
   })();
 

@@ -269,12 +269,13 @@ footer.rodape .ramo{margin:0 auto 8px}
 .trilho{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
 
 /* ---------- easter egg: gatinha espiando ---------- */
-.gatinha{position:absolute;z-index:5;left:52%;bottom:-70px;width:clamp(56px,13vw,96px);padding:0;border:0;background:none;transition:bottom .7s cubic-bezier(.3,1.4,.5,1);filter:drop-shadow(0 3px 4px #0004)}
+.gatinha{--gw:clamp(30px,7vw,46px);position:absolute;z-index:3;left:52%;bottom:-60px;width:var(--gw);padding:0;border:0;background:none;transition:bottom .9s ease-in-out;opacity:.96}
 .gatinha img{width:100%;height:auto;transform-origin:50% 100%}
-.gatinha.espia{bottom:2%}
-.gatinha.espia img{animation:cabeca 2.2s ease-in-out infinite}
-@keyframes cabeca{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
-.gatinha:focus-visible{bottom:2%}
+/* espia só com as orelhas e os olhos, por trás da grama do acostamento */
+.gatinha.espia{bottom:calc(var(--gw) * -0.36)}
+.gatinha.espia img{animation:cabeca 2.6s ease-in-out infinite}
+@keyframes cabeca{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.gatinha:focus-visible{bottom:-10px}
 .gatinha-modal .corpo{text-align:center;padding:22px 20px}
 .gatinha-modal h2{font-family:var(--f-script);font-weight:400;color:var(--vinho);font-size:40px;margin:4px 0 10px;line-height:1.1}
 .gt-desenho{width:110px;margin:0 auto}
