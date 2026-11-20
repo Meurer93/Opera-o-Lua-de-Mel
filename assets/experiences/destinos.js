@@ -42,7 +42,7 @@ window.LUA_DESTINOS = [
     experiencia: "O André promete não olhar o celular e a Érika promete não pedir só a sobremesa. Vamos ver quem cumpre. O importante é terminar o dia exatamente como começamos essa história: juntos e rindo.",
   },
   {
-    meta: 650, slug: "gastronomia", nome: "Gastronomia especial", icone: "🍽️", regiao: "Santa Catarina",
+    meta: 650, slug: "gastronomia", nome: "Experiência gastronômica", icone: "🍽️", regiao: "Santa Catarina",
     noivos: "assets/characters/03-gastronomia-especial.webp",
     resumo: "Uma experiência gastronômica para celebrar sabores do litoral catarinense.",
     especial: "Santa Catarina é a maior produtora de ostras e mexilhões do Brasil, e Florianópolis é Cidade Criativa da Gastronomia pela UNESCO. Comer bem aqui é quase obrigação.",
