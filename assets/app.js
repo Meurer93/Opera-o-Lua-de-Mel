@@ -403,6 +403,21 @@
   });
   window.addEventListener("hashchange", () => mostrarAba(location.hash.slice(1)));
 
+  // ------------------------------------------------------------ easter egg: gatinha
+  (function gatinha() {
+    const g = $("#gatinha"); if (!g) return;
+    // aparece por alguns segundos, de tempos em tempos, em posições diferentes da estrada
+    const espiar = () => {
+      if (document.hidden || $("#modal-gatinha").open) return;
+      g.style.left = (18 + Math.random() * 46) + "%";
+      g.classList.add("espia");
+      setTimeout(() => g.classList.remove("espia"), 4500);
+    };
+    setTimeout(espiar, 6000);
+    setInterval(espiar, 22000);
+    g.addEventListener("click", () => { g.classList.remove("espia"); abrir($("#modal-gatinha")); if (!reduzMov) confete(); });
+  })();
+
   // ------------------------------------------------------------ início
   montarCenas();
   mostrarAba(location.hash.slice(1));

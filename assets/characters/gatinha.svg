@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180">
+  <!-- Gatinha do casal: branca com manchas tigradas marrons, olhos verdes, língua de fora -->
+  <defs>
+    <linearGradient id="tig" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a7a55"/><stop offset="1" stop-color="#7d6146"/></linearGradient>
+  </defs>
+  <!-- orelhas -->
+  <path d="M38 78 L30 10 L86 46Z" fill="url(#tig)" stroke="#4a3626" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M162 78 L170 10 L114 46Z" fill="url(#tig)" stroke="#4a3626" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M44 66 L40 24 L74 46Z" fill="#f2c7c4"/>
+  <path d="M156 66 L160 24 L126 46Z" fill="#f2c7c4"/>
+  <!-- cabeça branca -->
+  <ellipse cx="100" cy="104" rx="78" ry="66" fill="#fbfaf7" stroke="#4a3626" stroke-width="3"/>
+  <!-- manchas tigradas no topo, com faixa branca no meio -->
+  <path d="M30 92 C30 60 52 42 84 38 C88 52 86 66 80 78 C64 72 46 80 30 92Z" fill="url(#tig)"/>
+  <path d="M170 92 C170 60 148 42 116 38 C112 52 114 66 120 78 C136 72 154 80 170 92Z" fill="url(#tig)"/>
+  <g stroke="#4f3a28" stroke-width="3" stroke-linecap="round" fill="none" opacity=".75">
+    <path d="M50 58 l10 8"/><path d="M60 50 l8 10"/><path d="M150 58 l-10 8"/><path d="M140 50 l-8 10"/>
+  </g>
+  <!-- olhos -->
+  <g>
+    <ellipse cx="70" cy="104" rx="15" ry="16" fill="#b7c06a" stroke="#3a2a1e" stroke-width="2.5"/>
+    <ellipse cx="130" cy="104" rx="15" ry="16" fill="#b7c06a" stroke="#3a2a1e" stroke-width="2.5"/>
+    <ellipse class="pupila" cx="71" cy="106" rx="8.5" ry="11" fill="#1e1a17"/>
+    <ellipse class="pupila" cx="129" cy="106" rx="8.5" ry="11" fill="#1e1a17"/>
+    <circle cx="74" cy="100" r="3.5" fill="#fff"/><circle cx="132" cy="100" r="3.5" fill="#fff"/>
+  </g>
+  <!-- nariz, boca e língua -->
+  <path d="M93 124 h14 l-7 8Z" fill="#e8a3a8" stroke="#3a2a1e" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M100 132 v6 M100 138 q-9 7 -16 2 M100 138 q9 7 16 2" stroke="#3a2a1e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path class="lingua" d="M93 141 q7 14 14 0Z" fill="#f08a9a" stroke="#3a2a1e" stroke-width="2"/>
+  <!-- bigodes -->
+  <g stroke="#cfc8bd" stroke-width="2" stroke-linecap="round">
+    <path d="M60 128 l-44 -6"/><path d="M60 134 l-44 4"/><path d="M140 128 l44 -6"/><path d="M140 134 l44 4"/>
+  </g>
+  <!-- bochechas -->
+  <ellipse cx="56" cy="132" rx="8" ry="5" fill="#f4b8b8" opacity=".55"/><ellipse cx="144" cy="132" rx="8" ry="5" fill="#f4b8b8" opacity=".55"/>
+</svg>

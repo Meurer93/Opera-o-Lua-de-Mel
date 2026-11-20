@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&family=Great+Vibes&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="carro.webp">
-<link rel="stylesheet" href="assets/estilo.css?v=10">
+<link rel="stylesheet" href="assets/estilo.css?v=12">
 </head>
 <body>
 <header class="topo">
@@ -73,6 +73,7 @@
         </svg>
       </div>
       <svg class="flores-estrada esq" viewBox="0 0 120 90" aria-hidden="true"><g fill="#3f7a3a"><path d="M10 90 Q20 40 60 30 Q40 60 44 90Z"/><path d="M40 90 Q70 30 112 40 Q80 60 86 90Z"/></g><g transform="translate(42 50)"><g fill="#e23d36"><ellipse rx="11" ry="17" transform="rotate(0) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(72) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(144) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(216) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(288) translate(0 -14)"/></g><circle r="5" fill="#ffd34d"/><path d="M0 0 L14 -22" stroke="#ffd34d" stroke-width="2.5"/></g><g transform="translate(88 66) scale(.7)"><g fill="#f0645c"><ellipse rx="11" ry="17" transform="translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(72) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(144) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(216) translate(0 -14)"/><ellipse rx="11" ry="17" transform="rotate(288) translate(0 -14)"/></g><circle r="5" fill="#ffd34d"/></g></svg>
+      <button type="button" class="gatinha" id="gatinha" aria-label="Ei, quem está espiando? Toque na gatinha"><img src="assets/characters/gatinha.svg" alt="" width="200" height="180"></button>
       <div class="chegada" id="chegada" aria-label="Arco de chegada da meta atual">
         <div class="postes"></div><div class="flores"></div>
         <div class="faixa madeira" id="faixa-chegada">CONSEGUIMOS!<br>R$ 50.000 ♡</div>
@@ -155,6 +156,18 @@
   </div>
 </dialog>
 
+<!-- Easter egg: gatinha -->
+<dialog id="modal-gatinha" class="gatinha-modal" aria-labelledby="gt-titulo">
+  <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
+  <div class="corpo">
+    <img class="gt-desenho" src="assets/characters/gatinha.svg" alt="" width="200" height="180">
+    <h2 id="gt-titulo">Você achou a nossa gatinha!</h2>
+    <figure class="noivos gt-foto"><img src="assets/characters/gatinha-foto.webp" alt="A gatinha de André e Érika, branca com manchas tigradas, com a linguinha de fora" width="560" height="807" loading="lazy"><figcaption>a dona da casa ♡</figcaption></figure>
+    <p>Ela não vai na lua de mel (ninguém perguntou a opinião dela), mas fica de olho em cada real que entra. Obrigado por procurar os detalhes, assim como a gente procura em cada pessoa que faz parte dessa história. ♡</p>
+    <button class="btn btn-pix" type="button" data-abrir-pix>♡ Contribuir em nome dela</button>
+  </div>
+</dialog>
+
 <!-- Modal: Pix -->
 <dialog id="modal-pix" class="pix" aria-labelledby="pix-titulo">
   <button class="fechar" type="button" data-fechar aria-label="Fechar">×</button>
@@ -197,8 +210,8 @@
   <button class="nav prox" type="button" id="lb-prox" aria-label="Próxima foto">›</button>
 </dialog>
 
-<script src="assets/config.js?v=10"></script>
-<script src="assets/experiences/destinos.js?v=11"></script>
-<script src="assets/app.js?v=10"></script>
+<script src="assets/config.js?v=12"></script>
+<script src="assets/experiences/destinos.js?v=12"></script>
+<script src="assets/app.js?v=12"></script>
 </body>
 </html>

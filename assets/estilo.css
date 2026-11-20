@@ -267,3 +267,16 @@ footer.rodape .ramo{margin:0 auto 8px}
 .carro.reinicio{animation:reinicio .6s ease-out 1}
 @keyframes reinicio{from{opacity:0;transform:translate3d(-80%,0,0)}to{opacity:1;transform:translate3d(-50%,0,0)}}
 .trilho{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- easter egg: gatinha espiando ---------- */
+.gatinha{position:absolute;z-index:5;left:52%;bottom:-70px;width:clamp(56px,13vw,96px);padding:0;border:0;background:none;transition:bottom .7s cubic-bezier(.3,1.4,.5,1);filter:drop-shadow(0 3px 4px #0004)}
+.gatinha img{width:100%;height:auto;transform-origin:50% 100%}
+.gatinha.espia{bottom:2%}
+.gatinha.espia img{animation:cabeca 2.2s ease-in-out infinite}
+@keyframes cabeca{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.gatinha:focus-visible{bottom:2%}
+.gatinha-modal .corpo{text-align:center;padding:22px 20px}
+.gatinha-modal h2{font-family:var(--f-script);font-weight:400;color:var(--vinho);font-size:40px;margin:4px 0 10px;line-height:1.1}
+.gt-desenho{width:110px;margin:0 auto}
+.gt-foto{max-width:260px;margin:4px auto 14px}
+.gatinha-modal p{color:#3d362d;font-size:15.5px}
