@@ -24,7 +24,7 @@
   const cenas = [];
   function montarCenas() {
     // Paisagens pintadas (img/cenarios/00 = abertura, 01..20 = destinos). As próximas carregam sob demanda.
-    const fundo = (i, prioridade) => `<img class="fundo-cena" src="${imgCena(i)}" alt="" ${prioridade ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="372" height="208">`;
+    const fundo = (i, prioridade) => `<img class="fundo-cena" src="${imgCena(i)}" alt="" ${prioridade ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" width="1280" height="720">`;
     D.forEach((d, i) => {
       const el = document.createElement("div");
       el.className = "cena";
