@@ -281,3 +281,6 @@ footer.rodape .ramo{margin:0 auto 8px}
 .gt-desenho{width:110px;margin:0 auto}
 .gt-foto{max-width:260px;margin:4px auto 14px}
 .gatinha-modal p{color:#3d362d;font-size:15.5px}
+.gt-apresenta{font-size:16px!important;margin:0 0 12px}
+.gt-apresenta b{color:var(--vinho)}
+.dica-flor{margin:0 0 10px;font-family:var(--f-titulo);font-style:italic;font-size:16px;color:var(--oliva)}
