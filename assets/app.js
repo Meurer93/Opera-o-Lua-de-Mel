@@ -407,16 +407,28 @@
   (function gatinha() {
     const g = $("#gatinha"); if (!g) return;
     // aparece por alguns segundos, de tempos em tempos, em posições diferentes da estrada
-    // aparece raramente, por poucos segundos, só com orelhas e olhos à mostra
+    // aparece raramente, só com orelhas e olhos à mostra, longe do balão de valor e do arco
+    let ate = 0; // toque até 1,2 s depois de sumir ainda conta
     const espiar = () => {
       if (document.hidden || $("#modal-gatinha").open) return;
-      g.style.left = (8 + Math.random() * 60) + "%";
+      const w = estrada.clientWidth;
+      const c = $("#balao").getBoundingClientRect(), ch = $("#chegada").getBoundingClientRect(), e = estrada.getBoundingClientRect();
+      const livres = [];
+      for (let x = 0.06; x <= 0.9; x += 0.02) {
+        const px = e.left + x * w;
+        if (px > c.left - 24 && px < c.right + 24) continue;
+        if (px > ch.left - 20 && px < ch.right + 20) continue;
+        livres.push(x);
+      }
+      if (!livres.length) return;
+      g.style.left = (livres[Math.floor(Math.random() * livres.length)] * 100) + "%";
       g.classList.add("espia");
-      setTimeout(() => g.classList.remove("espia"), 3200);
+      setTimeout(() => { g.classList.remove("espia"); ate = Date.now() + 1200; }, 6000);
     };
-    setTimeout(espiar, 25000 + Math.random() * 15000);
-    setInterval(espiar, 60000 + Math.random() * 30000);
-    g.addEventListener("click", () => { g.classList.remove("espia"); abrir($("#modal-gatinha")); if (!reduzMov) confete(); });
+    setTimeout(espiar, 20000 + Math.random() * 10000);
+    setInterval(espiar, 50000 + Math.random() * 20000);
+    g.addEventListener("click", () => {
+      if (!g.classList.contains("espia") && Date.now() > ate && document.activeElement !== g) return; g.classList.remove("espia"); abrir($("#modal-gatinha")); if (!reduzMov) confete(); });
   })();
 
   // ------------------------------------------------------------ início

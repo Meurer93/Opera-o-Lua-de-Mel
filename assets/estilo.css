@@ -89,7 +89,7 @@ main{max-width:1120px;margin:0 auto;padding:0 0 30px}
 .placa.ok .num{background:var(--oliva);box-shadow:0 2px 0 var(--oliva-esc),0 0 0 2px var(--dourado-claro)}
 .placa .selo{position:absolute;left:34px;top:-12px;background:var(--oliva);color:var(--marfim);font-size:10.5px;letter-spacing:.04em;padding:2px 8px;border-radius:99px;border:1px solid var(--dourado-claro);rotate:-3deg;box-shadow:0 2px 4px #0003}
 
-.pista{position:absolute;left:0;right:0;bottom:0;height:38%;z-index:1}
+.pista{position:absolute;left:0;right:0;bottom:0;height:38%;z-index:1;pointer-events:none}
 .pista svg{width:100%;height:100%;display:block}
 .estrada.andando .faixa-central{animation:faixa .5s linear infinite}
 @keyframes faixa{to{stroke-dashoffset:-110}}
@@ -269,13 +269,14 @@ footer.rodape .ramo{margin:0 auto 8px}
 .trilho{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
 
 /* ---------- easter egg: gatinha espiando ---------- */
-.gatinha{--gw:clamp(30px,7vw,46px);position:absolute;z-index:3;left:52%;bottom:-60px;width:var(--gw);padding:0;border:0;background:none;transition:bottom .9s ease-in-out;opacity:.96}
+.gatinha{--gw:clamp(30px,7vw,46px);position:absolute;z-index:0;left:52%;bottom:calc(36% - var(--gw) * 1.1);width:var(--gw);padding:0;border:0;background:none;transition:bottom .9s ease-in-out;opacity:.97}
 .gatinha img{width:100%;height:auto;transform-origin:50% 100%}
 /* espia só com as orelhas e os olhos, por trás da grama do acostamento */
-.gatinha.espia{bottom:calc(var(--gw) * -0.36)}
+/* espia por trás da grama do lado de cima da estrada: só orelhas e olhos à mostra */
+.gatinha.espia{bottom:calc(35.6% - var(--gw) * 0.36)}
 .gatinha.espia img{animation:cabeca 2.6s ease-in-out infinite}
 @keyframes cabeca{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-.gatinha:focus-visible{bottom:-10px}
+.gatinha:focus-visible{bottom:calc(35.6% - var(--gw) * 0.36)}
 .gatinha-modal .corpo{text-align:center;padding:22px 20px}
 .gatinha-modal h2{font-family:var(--f-script);font-weight:400;color:var(--vinho);font-size:40px;margin:4px 0 10px;line-height:1.1}
 .gt-desenho{width:110px;margin:0 auto}
@@ -284,3 +285,5 @@ footer.rodape .ramo{margin:0 auto 8px}
 .gt-apresenta{font-size:16px!important;margin:0 0 12px}
 .gt-apresenta b{color:var(--vinho)}
 .dica-flor{margin:0 0 10px;font-family:var(--f-titulo);font-style:italic;font-size:16px;color:var(--oliva)}
+/* área de toque maior e invisível em volta da Flor */
+.gatinha:before{content:"";position:absolute;left:-22px;right:-22px;top:-26px;bottom:35%}
