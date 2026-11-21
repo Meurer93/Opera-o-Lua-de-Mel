@@ -16,10 +16,13 @@
 .palco{position:relative;overflow:hidden}
 .fundo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.2s}
 .palco:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 55%,#0005)}
-.marca{position:absolute;left:3vmin;top:3vmin;z-index:3;background:#f7f1e6ee;border:1px solid var(--dourado);border-radius:18px;padding:1.2vmin 2.4vmin 1.6vmin;color:var(--vinho);text-align:center;box-shadow:0 6px 20px #0004}
-.marca small{display:block;font:800 1.5vmin/1 "Nunito Sans";letter-spacing:.3em;color:var(--oliva)}
-.marca b{display:block;font:400 6vmin/1.05 "Great Vibes",cursive}
-.marca span{font:700 2.3vmin "Cormorant Garamond",serif;color:var(--verde)}
+.marca{position:absolute;left:50%;top:2.5vmin;transform:translateX(-50%);z-index:3;width:min(78%,760px);text-align:center;color:var(--vinho);
+  background:linear-gradient(180deg,#fbf6ec,#efe3cc);padding:1.4vmin 9% 1.8vmin;filter:drop-shadow(0 6px 14px #0005);
+  clip-path:polygon(0 0,100% 0,95% 50%,100% 100%,0 100%,5% 50%)}
+.marca:before{content:"";position:absolute;inset:.8vmin 6.5%;border-top:2px solid var(--dourado);border-bottom:2px solid var(--dourado);pointer-events:none}
+.marca small{display:block;font:800 2.2vmin/1 "Nunito Sans";letter-spacing:.42em;color:var(--oliva)}
+.marca b{display:block;font:400 10.5vmin/1 "Great Vibes",cursive;margin:.4vmin 0 .2vmin}
+.marca span{display:block;font:700 3.4vmin "Cormorant Garamond",serif;color:var(--verde);letter-spacing:.08em}
 .estrada{position:absolute;left:0;right:0;bottom:0;height:30%;z-index:2}
 .estrada svg{width:100%;height:100%;display:block}
 .faixa{animation:faixa .6s linear infinite paused}
@@ -52,7 +55,7 @@
 .ticker{position:absolute;left:0;right:0;bottom:0;z-index:5;background:#65283Bee;color:var(--marfim);font:700 2.2vmin "Nunito Sans";padding:1vmin 3vmin;white-space:nowrap;overflow:hidden}
 .ticker span{display:inline-block;padding-left:100%;animation:passa 40s linear infinite}
 @keyframes passa{to{transform:translateX(-100%)}}
-.dica-tela{position:absolute;top:2vmin;right:2vmin;z-index:6;background:#000a;color:#fff;font:700 1.6vmin "Nunito Sans";padding:.8vmin 1.4vmin;border-radius:99px}
+.dica-tela{position:absolute;top:24vmin;left:50%;transform:translateX(-50%);z-index:6;background:#000a;color:#fff;font:700 1.6vmin "Nunito Sans";padding:.8vmin 1.4vmin;border-radius:99px}
 @media(orientation:portrait){.tela{grid-template-columns:1fr;grid-template-rows:55% 45%}.lado{border-left:0;border-top:2px solid var(--dourado)}.carro{width:42%}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
