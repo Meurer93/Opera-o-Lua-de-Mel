@@ -29,10 +29,14 @@
 .carro img{width:100%;display:block;animation:bob 2.4s ease-in-out infinite}
 .andando .carro img{animation-duration:.35s}
 @keyframes bob{50%{transform:translateY(-2px)}}
-.arco{position:absolute;z-index:3;right:2%;bottom:3%;width:34%;max-width:440px;height:62%}
-.arco .postes{position:absolute;left:0;right:0;bottom:0;top:30%;border:1.1vmin solid #8a5530;border-bottom:0;border-radius:3vmin 3vmin 0 0}
-.arco .placa{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;background:linear-gradient(#e6c48f,#c9965c);border:2px solid #5e3a22;border-radius:12px;padding:.8vmin 2vmin;color:var(--vinho);font:900 2.6vmin/1.15 "Nunito Sans";text-align:center;box-shadow:0 4px 10px #0004}
-.arco .placa small{display:block;color:var(--oliva);font-size:.7em;letter-spacing:.12em}
+/* linha de chegada quadriculada (asfalto da pista: de 2,7% a 23,2% da tela do palco) */
+.chegada{--lw:clamp(18px,2.6vw,34px);position:absolute;z-index:3;right:7%;bottom:0;width:var(--lw);height:62%;pointer-events:none}
+.chegada .linha{position:absolute;right:0;bottom:4.4%;height:33%;width:var(--lw);background:conic-gradient(#1f1d1b 0 25%,#f7f5ef 0 50%,#1f1d1b 0 75%,#f7f5ef 0) 0 0/calc(var(--lw) / 2) calc(var(--lw) / 2);box-shadow:0 0 0 2px #f7f5ef}
+.chegada .poste{position:absolute;right:calc(var(--lw) / 2 - 2px);bottom:37%;width:5px;height:34%;background:linear-gradient(90deg,#4a2c18,#7a4e2e,#4a2c18);border-radius:2px}
+.chegada .bandeira{position:absolute;right:calc(var(--lw) / 2 + 3px);bottom:62%;width:3.2vmin;height:2.2vmin;background:conic-gradient(#1f1d1b 0 25%,#fff 0 50%,#1f1d1b 0 75%,#fff 0) 0 0/1.1vmin 1.1vmin;border:1px solid #1f1d1b;transform-origin:100% 50%;animation:tremula 1.4s ease-in-out infinite}
+@keyframes tremula{0%,100%{transform:skewY(0)}50%{transform:skewY(-8deg) scaleX(.94)}}
+.chegada .placa{position:absolute;right:calc(var(--lw) / 2 - 2px);bottom:71%;white-space:nowrap;background:linear-gradient(#e6c48f,#c9965c);border:2px solid #5e3a22;border-radius:12px;padding:.8vmin 2vmin;color:var(--vinho);font:900 2.6vmin/1.15 "Nunito Sans";text-align:center;box-shadow:0 4px 10px #0004}
+.chegada .placa small{display:block;color:var(--oliva);font-size:.7em;letter-spacing:.12em}
 .lado{background:var(--marfim);color:var(--verde);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6vmin;padding:2.4vmin 2.4vmin;text-align:center;border-left:2px solid var(--dourado)}
 .lado .rumo{font:800 1.6vmin "Nunito Sans";letter-spacing:.24em;color:var(--oliva);text-transform:uppercase}
 .lado h1{margin:0;font:700 3.8vmin/1.08 "Cormorant Garamond",serif;color:var(--vinho)}
@@ -49,7 +53,7 @@
 .ticker span{display:inline-block;padding-left:100%;animation:passa 40s linear infinite}
 @keyframes passa{to{transform:translateX(-100%)}}
 .dica-tela{position:absolute;top:2vmin;right:2vmin;z-index:6;background:#000a;color:#fff;font:700 1.6vmin "Nunito Sans";padding:.8vmin 1.4vmin;border-radius:99px}
-@media(orientation:portrait){.tela{grid-template-columns:1fr;grid-template-rows:55% 45%}.lado{border-left:0;border-top:2px solid var(--dourado)}.carro{width:42%}.arco{width:42%}}
+@media(orientation:portrait){.tela{grid-template-columns:1fr;grid-template-rows:55% 45%}.lado{border-left:0;border-top:2px solid var(--dourado)}.carro{width:42%}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -68,7 +72,7 @@
         <path d="M0 200 Q80 192 160 202 T320 200 T480 204 T640 198 T800 204 T1000 200 L1000 220 L0 220Z" fill="#6f9442"/>
       </svg>
     </div>
-    <div class="arco"><div class="postes"></div><div class="placa" id="placa-arco">META 1<br>R$ 50 ♡</div></div>
+    <div class="chegada"><div class="linha"></div><div class="poste"></div><div class="bandeira"></div><div class="placa" id="placa-arco">META 1<br>R$ 50 ♡</div></div>
     <div class="carro" id="carro"><img src="carro.webp" alt="André e Érika no carrinho"></div>
     <div class="ticker" id="ticker"><span id="ticker-txt">Cada contribuição faz o nosso carrinho avançar ♡</span></div>
     <div class="dica-tela" id="dica">Toque para tela cheia</div>
@@ -103,8 +107,10 @@
     return { k, frac: (v - ini) / (D[k].meta - ini), final: false };
   }
   function posCarro(f) {
-    // de 14% (partida) até o centro do arco (~81%)
-    return 14 + (81 - 14) * Math.max(0, Math.min(1, f));
+    // de 14% (partida) até encostar na linha de chegada (calculado pela posição real da linha)
+    const palco = $("#palco").getBoundingClientRect(), ln = document.querySelector(".chegada .linha").getBoundingClientRect(), car = $("#carro").getBoundingClientRect();
+    const fim = ((ln.left - palco.left) - car.width * 0.44) / palco.width * 100;
+    return 14 + (fim - 14) * Math.max(0, Math.min(1, f));
   }
   function render() {
     const t = trecho(total), d = D[t.k];

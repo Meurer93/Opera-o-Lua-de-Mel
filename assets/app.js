@@ -68,7 +68,10 @@
     const t = trecho(v);
     const carro = $("#carro"), cw = carro.offsetWidth;
     const chegada = $("#chegada"), aw = chegada.offsetWidth;
-    const x0 = cw / 2 + 6, x1 = w - w * 0.015 - aw / 2;
+    // fim do trecho: o carro encosta na linha quadriculada (que continua visível)
+    const lw = chegada.querySelector(".linha").offsetWidth;
+    const linhaX = chegada.offsetLeft + chegada.offsetWidth - lw / 2;
+    const x0 = cw / 2 + 6, x1 = Math.max(x0 + 40, linhaX - lw / 2 - cw * 0.44);
     carro.style.left = x0 + (x1 - x0) * t.frac + "px";
     $("#balao").textContent = brl(v);
     $("#balao").hidden = t.final;

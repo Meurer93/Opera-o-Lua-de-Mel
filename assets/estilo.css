@@ -102,13 +102,17 @@ main{max-width:1120px;margin:0 auto;padding:0 0 30px}
 .flores-estrada{position:absolute;z-index:3;bottom:-4px;width:clamp(70px,16vw,130px);pointer-events:none;filter:drop-shadow(0 2px 3px #0003)}
 .flores-estrada.esq{left:-10px}
 
-/* chegada (visual aprovado) */
-.chegada{position:absolute;z-index:3;right:1.5%;bottom:3%;width:calc(var(--carro-w) * 1.02);height:calc(var(--carro-w) * 1.32);pointer-events:none}
-.chegada .postes{position:absolute;left:0;right:0;bottom:0;top:40%;border:8px solid #8a5530;border-bottom:0;border-radius:22px 22px 0 0;box-shadow:inset 0 0 0 2px #5b331e,0 0 0 2px #5b331e}
-.chegada .postes:before,.chegada .postes:after{content:"♥";position:absolute;top:8%;color:#d9534f;font-size:18px}
-.chegada .postes:before{left:8px}.chegada .postes:after{right:8px}
-.chegada .faixa{position:absolute;left:50%;top:0;transform:translateX(-50%);width:max-content;max-width:170%;text-align:center;font-weight:900;font-size:clamp(10px,2.6vw,15px);line-height:1.15;color:var(--vinho);padding:4px 9px}
-.chegada .flores{position:absolute;left:-6px;right:-6px;top:37%;height:12px;background:radial-gradient(circle,#ff8fa3 0 4px,transparent 5px) 0 0/18px 14px,radial-gradient(circle,#ffd34d 0 3px,transparent 4px) 9px 3px/18px 14px}
+/* chegada: linha quadriculada de corrida pintada no asfalto + poste com a placa da meta */
+.chegada{--lw:clamp(16px,3.6vw,28px);position:absolute;z-index:2;right:6%;bottom:0;width:calc(var(--carro-w) * .7);height:62%;pointer-events:none}
+/* o asfalto ocupa de 3,45% a 29,4% da altura da estrada (desenho da pista); aqui, relativo à caixa de 62% */
+.chegada .linha{position:absolute;right:0;bottom:5.6%;height:41.8%;width:var(--lw);
+  background:conic-gradient(#1f1d1b 0 25%,#f7f5ef 0 50%,#1f1d1b 0 75%,#f7f5ef 0) 0 0/calc(var(--lw) / 2) calc(var(--lw) / 2);
+  box-shadow:0 0 0 2px #f7f5ef,0 0 0 3px #0003;opacity:.95}
+.chegada .poste{position:absolute;right:calc(var(--lw) / 2 - 2px);bottom:47%;width:4px;height:33%;background:linear-gradient(90deg,#4a2c18,#7a4e2e,#4a2c18);border-radius:2px}
+.chegada .bandeira{position:absolute;right:calc(var(--lw) / 2 + 2px);bottom:66%;width:22px;height:15px;transform-origin:100% 50%;
+  background:conic-gradient(#1f1d1b 0 25%,#fff 0 50%,#1f1d1b 0 75%,#fff 0) 0 0/7px 7px;border:1px solid #1f1d1b;animation:tremula 1.4s ease-in-out infinite}
+@keyframes tremula{0%,100%{transform:skewY(0)}50%{transform:skewY(-8deg) scaleX(.94)}}
+.chegada .faixa{position:absolute;right:calc(var(--lw) / 2 - 2px);bottom:79%;transform-origin:100% 100%;width:max-content;max-width:180%;text-align:center;font-weight:900;font-size:clamp(10px,2.6vw,15px);line-height:1.15;color:var(--vinho);padding:4px 9px}
 
 .controles{position:absolute;z-index:5;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;pointer-events:none}
 .controles button{pointer-events:auto;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--dourado);background:#f7f1e6ee;font-size:22px;font-weight:700;color:var(--vinho);box-shadow:0 2px 6px #0002;display:grid;place-items:center;line-height:1}
@@ -263,7 +267,8 @@ footer.rodape .ramo{margin:0 auto 8px}
 .chegada .faixa small{display:block;font-size:.72em;letter-spacing:.1em;font-weight:800;color:var(--oliva)}
 .chegada.final .faixa{color:var(--vinho)}
 .chegada.festeja .faixa{animation:festeja .9s ease-out 1}
-@keyframes festeja{0%{transform:translateX(-50%) scale(1)}35%{transform:translateX(-50%) scale(1.18)}100%{transform:translateX(-50%) scale(1)}}
+.chegada.festeja .bandeira{animation:tremula .25s ease-in-out 4}
+@keyframes festeja{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
 .carro.reinicio{animation:reinicio .6s ease-out 1}
 @keyframes reinicio{from{opacity:0;transform:translate3d(-80%,0,0)}to{opacity:1;transform:translate3d(-50%,0,0)}}
 .trilho{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
@@ -287,3 +292,4 @@ footer.rodape .ramo{margin:0 auto 8px}
 .dica-flor{margin:0 0 10px;font-family:var(--f-titulo);font-style:italic;font-size:16px;color:var(--oliva)}
 /* área de toque maior e invisível em volta da Flor */
 .gatinha:before{content:"";position:absolute;left:-22px;right:-22px;top:-26px;bottom:35%}
+.chegada.final .faixa{bottom:64%}
